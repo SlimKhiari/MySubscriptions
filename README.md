@@ -1,6 +1,6 @@
 # MySubscriptions
 
 # Client 
-# npm run dev
+- npm run dev
 # Server
 # npm start 
