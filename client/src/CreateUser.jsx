@@ -38,7 +38,7 @@ function CreateUser () {
                 <div className='col-lg-6'>
                     <div className='card shadow-lg border-0 rounded-lg mt-5'>
                         <div className='card-header'>
-                            <h3 className='text-center font-weight-light my-4'>J'ajoute mon nouveau abonnement !</h3>
+                            <h3 className='text-center font-weight-light my-4'>Mon nouveau abonnement !</h3>
                         </div>
                         <div className='card-body'>
                             <form onSubmit={Submit}>
@@ -80,12 +80,11 @@ function CreateUser () {
                                         selected={dateDebut}
                                         onChange={date => setDateDebut(date)}
                                         className='form-control'
-                                        placeholderText='MM/JJ/YYYY'
-                                        dateFormat="MM/dd/yyyy"
+                                        dateFormat="dd/MM/yyyy"
                                     />
                                 </div>
                                 <div className='d-flex align-items-center justify-content-center mt-4 mb-0'>
-                                    <button type='submit' className='btn btn-primary'>Submit</button>
+                                    <button type='submit' className='btn btn-primary'>Ajouter</button>
                                 </div>
                             </form>
                         </div>

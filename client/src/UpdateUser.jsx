@@ -2,87 +2,111 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
+function UpdateUser() {
+    const { id } = useParams();
+    const [nomAbonnement, setName] = useState("");
+    const [cout, setCout] = useState(0);
+    const [period, setPeriod] = useState("Mensuel");
+    const [dateDebut, setDateDebut] = useState(new Date());
 
-function UpdateUser () {
-    const {id} = useParams() 
-    const [nomAbonnement, setName] = useState()
-    const [cout, setCout] = useState()
-    const [period, setPeriod] = useState()
-    const [dateDebut, setDateDebut] = useState(null);  
-
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get('http://localhost:3001/getUser/'+id)
-        .then(result => {console.log(result)
-           setName(result.data.nomAbonnement)
-           setCout(result.data.cout)
-           setPeriod(result.data.period)
-           setDateDebut(result.data.dateDebut)
-        })
-        .catch(err => console.log(err))
-    }, [])
- 
+        axios.get('http://localhost:3001/getUser/' + id)
+            .then(result => {
+                console.log(result);
+                setName(result.data.nomAbonnement);
+                setCout(result.data.cout);
+                setPeriod(result.data.period);
+                setDateDebut(new Date(result.data.dateDebut));
+            })
+            .catch(err => console.log(err));
+    }, [id]);
+
     const Update = (e) => {
         e.preventDefault();
-        axios.put("http://localhost:3001/updateUser/"+id, {nomAbonnement, cout, period, dateDebut})
-        .then(result => {
-            console.log(result)
-            navigate("/")
-        })
-        .catch(err => console.log(err))
-    }
+        const formattedDate = `${dateDebut.getFullYear()}-${(dateDebut.getMonth() + 1).toString().padStart(2, '0')}-${dateDebut.getDate().toString().padStart(2, '0')}`;
+        axios.put("http://localhost:3001/updateUser/" + id, { nomAbonnement, cout, period, dateDebut: formattedDate })
+            .then(result => {
+                console.log(result);
+                navigate("/");
+            })
+            .catch(err => console.log(err));
+    };
 
     const handleCostChange = (e) => {
-        let value = parseInt(e.target.value); 
-        if (isNaN(value) || value < 0) { 
-              value = 0; 
+        let value = parseInt(e.target.value);
+        if (isNaN(value) || value < 0) {
+            value = 0;
         }
         setCout(value);
     };
-    
+
     return (
-        <div>
-            <div className='d-flex vh-100 bg-primary justify-content-center align-items-center'>
-                <div className='w-50 bg-white rounded p-3'>
-                    <form onSubmit={Update}>
-                        <h2>Update User</h2>
-                        <div className='mb-2'>
-                            <label htmlFor="">Nom de l'abonnement</label>
-                            <input type="text" placeholder='Enter Name' className='form-control'
-                            value={nomAbonnement} onChange={(e) => setName(e.target.value)}/>
+        <div className="container mt-5">
+            <div className='row justify-content-center'>
+                <div className='col-lg-8'>
+                    <div className='card shadow-lg border-0 rounded-lg mt-5'>
+                        <div className='card-header'>
+                            <h3 className='text-center font-weight-light my-4'>Update User</h3>
                         </div>
-                        <div className="form-group">
-                            <label>Coût de l'abonnement:</label>
-                            <div className="input-group">
-                            <input type="number" name="cost" className="form-control" placeholder="Enter Price"
-                                value={cout} onChange={handleCostChange}
-                            />
-                            <div className="input-group-append">
-                                <select name="interval" className="form-control"
-                                value={period} onChange={(e) => setPeriod(e.target.value)}
-                                >
-                                <option value="Mensuel">Mensuel</option>
-                                <option value="Annuel">Annuel</option>
-                                </select>
-                            </div>
-                            </div>
+                        <div className='card-body'>
+                            <form onSubmit={Update}>
+                                <div className='mb-3'>
+                                    <label className='form-label'>Nom de l'abonnement</label>
+                                    <input
+                                        type="text"
+                                        className='form-control'
+                                        placeholder='Enter Name'
+                                        value={nomAbonnement}
+                                        onChange={(e) => setName(e.target.value)}
+                                    />
+                                </div>
+                                <div className="mb-3">
+                                    <label className='form-label'>Coût de l'abonnement:</label>
+                                    <div className="input-group">
+                                        <input
+                                            type="number"
+                                            className="form-control"
+                                            placeholder="Enter Price"
+                                            value={cout}
+                                            onChange={handleCostChange}
+                                        />
+                                        <div className="input-group-append">
+                                            <select
+                                                className="form-select"
+                                                value={period}
+                                                onChange={(e) => setPeriod(e.target.value)}
+                                            >
+                                                <option value="Mensuel">Mensuel</option>
+                                                <option value="Annuel">Annuel</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className='mb-3'>
+                                    <label className='form-label'>Date de début de facturation:</label>
+                                    <DatePicker
+                                        selected={dateDebut}
+                                        onChange={date => setDateDebut(date)}
+                                        className="form-control"
+                                        placeholderText="MM/JJ/YYYY"
+                                        dateFormat="dd/MM/yyyy"
+                                    />
+                                </div>
+                                <div className='d-grid'>
+                                    <button className='btn btn-primary btn-block'>Update</button>
+                                </div>
+                            </form>
                         </div>
-                        <div className='mb-2'>
-                            <label>Date de début de facturation:</label>
-                            <DatePicker
-                                selected={dateDebut}
-                                onChange={(e) => setDateDebut(e.target.value)}
-                                className="form-control"
-                            />
-                        </div>
-                        <button className='btn btn-success'>Update</button>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
 export default UpdateUser;
