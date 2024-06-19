@@ -50,7 +50,7 @@ function AjouterAbonnement () {
                                         value={nom} 
                                         onChange={(e) => setName(e.target.value)} 
                                     />
-                                    <label htmlFor='nomAbonnement'>Nom de l'abonnement</label>
+                                    <label htmlFor='nomAbonnement'>Nom</label>
                                 </div>
                                 <div className='form-floating mb-3'>
                                     <input 
@@ -60,7 +60,7 @@ function AjouterAbonnement () {
                                         value={cout} 
                                         onChange={handleCostChange} 
                                     />
-                                    <label htmlFor='cout'>Coût de l'abonnement</label>
+                                    <label htmlFor='cout'>Coût</label>
                                 </div>
                                 <div className='form-floating mb-3'>
                                     <select 

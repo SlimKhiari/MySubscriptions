@@ -33,7 +33,7 @@ function Abonnements () {
                             <table className='table table-striped'>
                                 <thead>
                                     <tr>
-                                        <th>Nom de l'abonnement</th>
+                                        <th>Nom</th>
                                         <th>Coût</th>
                                         <th>Période</th>
                                         <th>Date de début de facturation</th>

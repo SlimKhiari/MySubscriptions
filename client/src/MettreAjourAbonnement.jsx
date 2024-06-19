@@ -56,7 +56,7 @@ function MettreAjourAbonnement() {
                         <div className='card-body'>
                             <form onSubmit={Update}>
                                 <div className='mb-3'>
-                                    <label className='form-label'>Nom de l'abonnement</label>
+                                    <label className='form-label'>Nom</label>
                                     <input
                                         type="text"
                                         className='form-control'
@@ -66,7 +66,7 @@ function MettreAjourAbonnement() {
                                     />
                                 </div>
                                 <div className="mb-3">
-                                    <label className='form-label'>Coût de l'abonnement:</label>
+                                    <label className='form-label'>Prix</label>
                                     <div className="input-group">
                                         <input
                                             type="number"
@@ -88,7 +88,7 @@ function MettreAjourAbonnement() {
                                     </div>
                                 </div>
                                 <div className='mb-3'>
-                                    <label className='form-label'>Date de début de facturation:</label>
+                                    <label className='form-label'>Date de début de facturation</label>
                                     <DatePicker
                                         selected={dateDebut}
                                         onChange={date => setDateDebut(date)}
