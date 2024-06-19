@@ -25,9 +25,10 @@ app.get('/getUser/:id', (req,res) => {
 app.put('/updateUser/:id', (req,res) => {
     const id = req.params.id;
     UserModel.findByIdAndUpdate({_id:id}, {
-        name: req.body.name, 
-        email: req.body.email, 
-        age: req.body.age})
+        nomAbonnement: req.body.nomAbonnement, 
+        cout: req.body.cout, 
+        period: req.body.period,
+        dateDebut: req.body.dateDebut})
     .then(users => res.json(users))
     .catch(err => res.json(err))
 })
@@ -35,9 +36,10 @@ app.put('/updateUser/:id', (req,res) => {
 app.delete('/deleteUser/:id', (req, res) => {
     const id = req.params.id;
     UserModel.findByIdAndDelete({_id:id}, {
-        name: req.body.name, 
-        email: req.body.email, 
-        age: req.body.age})
+        nomAbonnement: req.body.nomAbonnement, 
+        cout: req.body.cout, 
+        period: req.body.period,
+        dateDebut: req.body.dateDebut})
     .then(users => res.json(users))
     .catch(err => res.json(err))
 })
