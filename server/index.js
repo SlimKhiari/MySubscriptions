@@ -1,7 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
-const UserModel = require('./models/Users')
+const Abonnementmodel = require('./models/Abonnements')
 
 const app = express()
 app.use(cors())
@@ -10,43 +10,44 @@ app.use(express.json())
 mongoose.connect("mongodb://127.0.0.1:27017/subscriptions_octopuslabs")
 
 app.get("/", (req,res) =>{
-    UserModel.find()
-    .then(users => res.json(users))
+    Abonnementmodel.find()
+    .then(abonnements => res.json(abonnements))
     .catch(err => res.json(err))
 })
 
-app.get('/getUser/:id', (req,res) => {
+app.get('/get/:id', (req,res) => {
      const id = req.params.id;
-     UserModel.findById({_id:id})
-     .then(users => res.json(users))
+     Abonnementmodel.findById({_id:id})
+     .then(abonnements => res.json(abonnements))
      .catch(err => res.json(err))
 })
 
-app.put('/updateUser/:id', (req,res) => {
+app.put('/update/:id', (req,res) => {
     const id = req.params.id;
-    UserModel.findByIdAndUpdate({_id:id}, {
-        nomAbonnement: req.body.nomAbonnement, 
+    Abonnementmodel.findByIdAndUpdate({_id:id}, {
+        nomAbonnement: req.body.nom, 
         cout: req.body.cout, 
         period: req.body.period,
-        dateDebut: req.body.dateDebut})
+        dateDebut: req.body.dateDebut
+    })
     .then(users => res.json(users))
     .catch(err => res.json(err))
 })
 
-app.delete('/deleteUser/:id', (req, res) => {
+app.delete('/delete/:id', (req, res) => {
     const id = req.params.id;
-    UserModel.findByIdAndDelete({_id:id}, {
-        nomAbonnement: req.body.nomAbonnement, 
+    Abonnementmodel.findByIdAndDelete({_id:id}, {
+        nomAbonnement: req.body.nom, 
         cout: req.body.cout, 
         period: req.body.period,
         dateDebut: req.body.dateDebut})
-    .then(users => res.json(users))
+    .then(abonnements => res.json(abonnements))
     .catch(err => res.json(err))
 })
 
-app.post("/createUser", (req,res) => {
-    UserModel.create(req.body)
-    .then(users => res.json(users))
+app.post("/create", (req,res) => {
+    Abonnementmodel.create(req.body)
+    .then(abonnements => res.json(abonnements))
     .catch(err => res.json(err))
 })
 

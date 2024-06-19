@@ -1,11 +1,11 @@
 const mongoose = require('mongoose')
 
 const UserSchema = new mongoose.Schema({
-    nomAbonnement: String,
+    nom: String,
     cout: Number,
     period: String,
     dateDebut: String
 })
 
-const Usermodel = mongoose.model("users", UserSchema)
-module.exports = Usermodel
+const Abonnementmodel = mongoose.model("abonnements", UserSchema)
+module.exports = Abonnementmodel
