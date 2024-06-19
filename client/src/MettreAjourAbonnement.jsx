@@ -5,9 +5,9 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-function UpdateUser() {
+function MettreAjourAbonnement() {
     const { id } = useParams();
-    const [nomAbonnement, setName] = useState("");
+    const [nom, setName] = useState("");
     const [cout, setCout] = useState(0);
     const [period, setPeriod] = useState("Mensuel");
     const [dateDebut, setDateDebut] = useState(new Date());
@@ -15,10 +15,10 @@ function UpdateUser() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get('http://localhost:3001/getUser/' + id)
+        axios.get('http://localhost:3001/get/' + id)
             .then(result => {
                 console.log(result);
-                setName(result.data.nomAbonnement);
+                setName(result.data.nom);
                 setCout(result.data.cout);
                 setPeriod(result.data.period);
                 setDateDebut(new Date(result.data.dateDebut));
@@ -29,7 +29,7 @@ function UpdateUser() {
     const Update = (e) => {
         e.preventDefault();
         const formattedDate = `${dateDebut.getFullYear()}-${(dateDebut.getMonth() + 1).toString().padStart(2, '0')}-${dateDebut.getDate().toString().padStart(2, '0')}`;
-        axios.put("http://localhost:3001/updateUser/" + id, { nomAbonnement, cout, period, dateDebut: formattedDate })
+        axios.put("http://localhost:3001/update/" + id, { nom, cout, period, dateDebut: formattedDate })
             .then(result => {
                 console.log(result);
                 navigate("/");
@@ -61,7 +61,7 @@ function UpdateUser() {
                                         type="text"
                                         className='form-control'
                                         placeholder='Enter Name'
-                                        value={nomAbonnement}
+                                        value={nom}
                                         onChange={(e) => setName(e.target.value)}
                                     />
                                 </div>
@@ -109,4 +109,4 @@ function UpdateUser() {
     );
 }
 
-export default UpdateUser;
+export default MettreAjourAbonnement;

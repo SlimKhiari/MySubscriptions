@@ -5,8 +5,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-function CreateUser () {
-    const [nomAbonnement, setName] = useState("");
+function AjouterAbonnement () {
+    const [nom, setName] = useState("");
     const [cout, setCout] = useState();
     const [period, setPeriod] = useState("Mensuel");
     const [dateDebut, setDateDebut] = useState(new Date());
@@ -16,7 +16,7 @@ function CreateUser () {
     const Submit = (e) => {
         e.preventDefault();
         const formattedDate = `${dateDebut.getFullYear()}-${(dateDebut.getMonth() + 1).toString().padStart(2, '0')}-${dateDebut.getDate().toString().padStart(2, '0')}`;
-        axios.post("http://localhost:3001/createUser", {nomAbonnement, cout, period, dateDebut: formattedDate})
+        axios.post("http://localhost:3001/create", {nom, cout, period, dateDebut: formattedDate})
             .then(result => {
                 console.log(result);
                 navigate("/");
@@ -46,8 +46,8 @@ function CreateUser () {
                                     <input 
                                         type='text' 
                                         className='form-control' 
-                                        id='nomAbonnement' 
-                                        value={nomAbonnement} 
+                                        id='nom' 
+                                        value={nom} 
                                         onChange={(e) => setName(e.target.value)} 
                                     />
                                     <label htmlFor='nomAbonnement'>Nom de l'abonnement</label>
@@ -95,4 +95,4 @@ function CreateUser () {
     );
 }
 
-export default CreateUser;
+export default AjouterAbonnement;

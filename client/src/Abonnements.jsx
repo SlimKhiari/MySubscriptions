@@ -3,20 +3,20 @@ import { Link } from "react-router-dom";
 import axios from 'axios';
 import "bootstrap/dist/css/bootstrap.min.css";
 
-function Users () {
-    const [users, setUsers] = useState([]);
+function Abonnements () {
+    const [abonnements, setAbonnements] = useState([]);
 
     useEffect(() => {
         axios.get("http://localhost:3001")
-            .then(result => setUsers(result.data))
+            .then(result => setAbonnements(result.data))
             .catch(err => console.log(err));
     }, []);
 
     const handleDelete = (id) => {
-        axios.delete('http://localhost:3001/deleteUser/' + id)
+        axios.delete('http://localhost:3001/delete/' + id)
             .then(res => {
                 console.log(res);
-                setUsers(users.filter(user => user._id !== id));
+                setAbonnements(abonnements.filter(user => user._id !== id));
             })
             .catch(err => console.log(err));
     };
@@ -37,20 +37,19 @@ function Users () {
                                         <th>Coût</th>
                                         <th>Période</th>
                                         <th>Date de début de facturation</th>
-                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {
-                                        users.map((user) => (
-                                            <tr key={user._id}>
-                                                <td>{user.nomAbonnement}</td>
-                                                <td>{user.cout}</td>
-                                                <td>{user.period}</td>
-                                                <td>{new Date(user.dateDebut).toLocaleDateString()}</td>
+                                        abonnements.map((abonnement) => (
+                                            <tr key={abonnement._id}>
+                                                <td>{abonnement.nom}</td>
+                                                <td>{abonnement.cout}</td>
+                                                <td>{abonnement.period}</td>
+                                                <td>{new Date(abonnement.dateDebut).toLocaleDateString()}</td>
                                                 <td>
-                                                    <Link to={`/update/${user._id}`} className='btn btn-success btn-sm me-2'>Update</Link>
-                                                    <button className='btn btn-danger btn-sm' onClick={() => handleDelete(user._id)}>Delete</button>
+                                                    <Link to={`/update/${abonnement._id}`} className='btn btn-success btn-sm me-2'>Update</Link>
+                                                    <button className='btn btn-danger btn-sm' onClick={() => handleDelete(abonnement._id)}>Delete</button>
                                                 </td>
                                             </tr>
                                         ))
@@ -59,7 +58,7 @@ function Users () {
                             </table>
                         </div>
                         <div className='card-footer text-center'>
-                            <Link to="/create" className='btn btn-primary'>J'ajoute +</Link>
+                            <Link to="/create" className='btn btn-primary'>+</Link>
                         </div>
                     </div>
                 </div>
@@ -68,4 +67,4 @@ function Users () {
     );
 }
 
-export default Users;
+export default Abonnements;
