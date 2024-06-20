@@ -25,7 +25,7 @@ app.get('/get/:id', (req,res) => {
 app.put('/update/:id', (req,res) => {
     const id = req.params.id;
     Abonnementmodel.findByIdAndUpdate({_id:id}, {
-        nomAbonnement: req.body.nom, 
+        nom: req.body.nom, 
         cout: req.body.cout, 
         period: req.body.period,
         dateDebut: req.body.dateDebut
