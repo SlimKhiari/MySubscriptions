@@ -27,7 +27,7 @@ function Abonnements () {
                 <div className='col-lg-8'>
                     <div className='card shadow-lg border-0 rounded-lg mt-5'>
                         <div className='card-header'>
-                            <h3 className='text-center font-weight-light my-4'>Mes abonnements</h3>
+                            <h3 className='text-center font-weight-light my-4'>Mes abonnements !</h3>
                         </div>
                         <div className='card-body'>
                             <table className='table table-striped'>
@@ -48,8 +48,11 @@ function Abonnements () {
                                                 <td>{abonnement.period}</td>
                                                 <td>{new Date(abonnement.dateDebut).toLocaleDateString()}</td>
                                                 <td>
-                                                    <Link to={`/update/${abonnement._id}`} className='btn btn-success btn-sm me-2'>Update</Link>
-                                                    <button className='btn btn-danger btn-sm' onClick={() => handleDelete(abonnement._id)}>Delete</button>
+                                                    <Link to={`/update/${abonnement._id}`} className='btn btn-sm me-2'>
+                                                    <img src="../public/update_logo.jpg" alt="Update" style={{ width: '20px', height: '20px' }} /></Link>
+                                                    <button className='btn btn-sm' onClick={() => handleDelete(abonnement._id)}>
+                                                    <img src="../public/delete_logo.png" alt="Update" style={{ width: '20px', height: '20px' }} />
+                                                    </button>
                                                 </td>
                                             </tr>
                                         ))

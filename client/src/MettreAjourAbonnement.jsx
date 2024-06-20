@@ -51,7 +51,7 @@ function MettreAjourAbonnement() {
                 <div className='col-lg-8'>
                     <div className='card shadow-lg border-0 rounded-lg mt-5'>
                         <div className='card-header'>
-                            <h3 className='text-center font-weight-light my-4'>Update User</h3>
+                            <h3 className='text-center font-weight-light my-4'>Mon abonnement mise à jour !</h3>
                         </div>
                         <div className='card-body'>
                             <form onSubmit={Update}>
@@ -98,7 +98,7 @@ function MettreAjourAbonnement() {
                                     />
                                 </div>
                                 <div className='d-grid'>
-                                    <button className='btn btn-primary btn-block'>Update</button>
+                                    <button className='btn btn-primary btn-block'>Je mets à jour</button>
                                 </div>
                             </form>
                         </div>

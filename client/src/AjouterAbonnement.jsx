@@ -84,7 +84,7 @@ function AjouterAbonnement () {
                                     />
                                 </div>
                                 <div className='d-flex align-items-center justify-content-center mt-4 mb-0'>
-                                    <button type='submit' className='btn btn-primary'>Ajouter</button>
+                                    <button type='submit' className='btn btn-primary'>J'ajoute</button>
                                 </div>
                             </form>
                         </div>
