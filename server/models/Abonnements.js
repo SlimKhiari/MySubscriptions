@@ -4,7 +4,8 @@ const AbonnementSchema = new mongoose.Schema({
     nom: String,
     cout: Number,
     period: String,
-    dateDebut: String
+    dateDebut: String,
+    email: String
 })
 
 const Abonnementmodel = mongoose.model("abonnements", AbonnementSchema)
