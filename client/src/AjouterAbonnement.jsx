@@ -10,6 +10,7 @@ function AjouterAbonnement () {
     const [cout, setCout] = useState();
     const [period, setPeriod] = useState("Mensuel");
     const [dateDebut, setDateDebut] = useState(new Date());
+    const [email, setEmail] = useState("test@test.com");
 
     const navigate = useNavigate();
 
@@ -21,6 +22,8 @@ function AjouterAbonnement () {
                 console.log(result.data)
                 if (!result.data.valid) {
                     navigate("/");
+                } else {
+                    setEmail(result.data.email);
                 }
             })
             .catch(err => console.log(err));
@@ -29,7 +32,7 @@ function AjouterAbonnement () {
     const Submit = (e) => {
         e.preventDefault();
         const formattedDate = `${dateDebut.getFullYear()}-${(dateDebut.getMonth() + 1).toString().padStart(2, '0')}-${dateDebut.getDate().toString().padStart(2, '0')}`;
-        axios.post("http://localhost:3001/create", {nom, cout, period, dateDebut: formattedDate})
+        axios.post("http://localhost:3001/create", {nom, cout, period, dateDebut: formattedDate, email})
             .then(result => {
                 console.log(result);
                 navigate("/dashboard");
@@ -52,6 +55,7 @@ function AjouterAbonnement () {
                     <div className='card shadow-lg border-0 rounded-lg mt-5'>
                         <div className='card-header'>
                             <h3 className='text-center font-weight-light my-4'>Mon nouveau abonnement !</h3>
+                            <h4>Email: {email}</h4>
                         </div>
                         <div className='card-body'>
                             <form onSubmit={Submit}>
