@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import DatePicker from "react-datepicker";
@@ -12,6 +12,19 @@ function AjouterAbonnement () {
     const [dateDebut, setDateDebut] = useState(new Date());
 
     const navigate = useNavigate();
+
+    axios.defaults.withCredentials = true;
+
+    useEffect(() => {
+        axios.get("http://localhost:3001/dashboard")
+            .then(result => {
+                console.log(result.data)
+                if (!result.data.valid) {
+                    navigate("/");
+                }
+            })
+            .catch(err => console.log(err));
+    }, []);
 
     const Submit = (e) => {
         e.preventDefault();

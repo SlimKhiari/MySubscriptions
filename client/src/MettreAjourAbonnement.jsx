@@ -26,6 +26,16 @@ function MettreAjourAbonnement() {
             .catch(err => console.log(err));
     }, [id]);
 
+    useEffect(() => {
+        axios.get("http://localhost:3001/dashboard")
+            .then(result => {
+                if (!result.data.valid) {
+                    navigate("/login");
+                }
+            })
+            .catch(err => console.log(err));
+    }, []);
+
     const Update = (e) => {
         e.preventDefault();
         const formattedDate = `${dateDebut.getFullYear()}-${(dateDebut.getMonth() + 1).toString().padStart(2, '0')}-${dateDebut.getDate().toString().padStart(2, '0')}`;
