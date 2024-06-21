@@ -1,14 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function Abonnements () {
     const [abonnements, setAbonnements] = useState([]);
+    const navigate = useNavigate()
+
+    axios.defaults.withCredentials = true;
 
     useEffect(() => {
         axios.get("http://localhost:3001/dashboard")
-            .then(result => setAbonnements(result.data))
+            .then(result => {
+                if(result.data.valid) {
+                    setAbonnements(result.data.abonnements)
+                } else {
+                    navigate("/")
+                }}
+            )
             .catch(err => console.log(err));
     }, []);
 

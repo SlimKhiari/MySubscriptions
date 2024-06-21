@@ -19,6 +19,7 @@ const Login = () => {
                 console.log(res.data)
                 navigate("/dashboard")
             } else {
+                console.log(res.data)
                 navigate("/login")
             } 
         })
