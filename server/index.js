@@ -2,38 +2,42 @@ const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
 const jwt = require('jsonwebtoken');
-//import cookieParser from 'cookie-parser'
+const cookieParser = require('cookie-parser');
 
 const Abonnementmodel = require('./models/Abonnements')
-const Utilisateurmodel = require('./models/Utilisateurs')
+const Utilisateurmodel = require('./models/Utilisateurs');
 
 const app = express()
 app.use(cors({
-    origin: ["http://localhost:5174"],
+    origin: ["http://localhost:5173"],
     credentials: true
 }))
 app.use(express.json())
+app.use(cookieParser())
 
 mongoose.connect("mongodb://127.0.0.1:27017/subscriptions_octopuslabs")
 
 const verifyUser = (req, res, next) => {
     const accessToken = req.cookies.accessToken;
-    if(!accessToken) {
-
+    if (!accessToken) {
+        if (renewToken(req, res)) {
+            return next();
+        }
     } else {
         jwt.verify(accessToken, 'jwt-access-token-secret-key', (err, decoded) => {
-            if(err) {
+            if (err) {
                 return res.json({valid: false, message: "Invalid Token"})
             } else {
                 req.email = decoded.email;
-                next()
+                return next();
             }
-        })
+        });
     }
-}
+};
 
 const renewToken = (req, res) => {
     const refreshToken = req.cookies.refreshToken;
+    let exist = false;
     if(!refreshToken) {
         return res.json({valid: false, message: "No refresh token"})
     } else {
@@ -41,20 +45,26 @@ const renewToken = (req, res) => {
             if(err) {
                 return res.json({valid: false, message: "Invalid Refresh Token"})
             } else {
-                const accessToken = jwt.sign({email: email}, 
+                const accessToken = jwt.sign({email: decoded.email}, 
                     "jwt-access-token-secret-key", {expiresIn: '1m'})
-                res.cookie('accessToke', accessToken, {maxAge: 60000})
+                res.cookie('accessToken', accessToken, {maxAge: 60000})
+                exist = true;
             }
         })
     }
+    return exist;
 }
  
-
-app.get("/dashboard", (req,res) =>{
+app.get("/dashboard", verifyUser, (req, res) => {
     Abonnementmodel.find()
-    .then(abonnements => res.json(abonnements))
-    .catch(err => res.json(err))
-})
+        .then(abonnements => {
+            res.json({valid: true, abonnements: abonnements});
+        })
+        .catch(err => {
+            res.json({valid: false, error: err});
+        });
+});
+
 
 app.get('/get/:id', (req,res) => {
      const id = req.params.id;
@@ -109,7 +119,7 @@ app.post("/login", (req,res) => {
                 const refreshToken = jwt.sign({email: email}, 
                     "jwt-refresh-token-secret-key", {expiresIn: '5m'})
 
-                res.cookie('accessToke', accessToken, {maxAge: 60000})
+                res.cookie('accessToken', accessToken, {maxAge: 60000})
                 
                 res.cookie('refreshToken', refreshToken, 
                     {maxAge: 300000, httpOnly: true, secure: true, sameSite: 'strict'})       
