@@ -32,7 +32,7 @@ function MettreAjourAbonnement() {
         axios.put("http://localhost:3001/update/" + id, { nom, cout, period, dateDebut: formattedDate })
             .then(result => {
                 console.log(result);
-                navigate("/");
+                navigate("/dashboard");
             })
             .catch(err => console.log(err));
     };

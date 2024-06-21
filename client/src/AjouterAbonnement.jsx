@@ -19,7 +19,7 @@ function AjouterAbonnement () {
         axios.post("http://localhost:3001/create", {nom, cout, period, dateDebut: formattedDate})
             .then(result => {
                 console.log(result);
-                navigate("/");
+                navigate("/dashboard");
             })
             .catch(err => console.log(err));
     };

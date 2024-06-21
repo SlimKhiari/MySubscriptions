@@ -7,7 +7,7 @@ function Abonnements () {
     const [abonnements, setAbonnements] = useState([]);
 
     useEffect(() => {
-        axios.get("http://localhost:3001")
+        axios.get("http://localhost:3001/dashboard")
             .then(result => setAbonnements(result.data))
             .catch(err => console.log(err));
     }, []);
@@ -15,7 +15,6 @@ function Abonnements () {
     const handleDelete = (id) => {
         axios.delete('http://localhost:3001/delete/' + id)
             .then(res => {
-                console.log(res);
                 setAbonnements(abonnements.filter(user => user._id !== id));
             })
             .catch(err => console.log(err));
