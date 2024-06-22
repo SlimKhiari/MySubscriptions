@@ -102,10 +102,21 @@ app.post("/create", verifyUser, (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-    Utilisateurmodel.create(req.body)
-        .then(user => res.json(user))
-        .catch(err => res.json(err));
+    const { email, motDePasse } = req.body;
+
+    Utilisateurmodel.findOne({ email })
+        .then(user => {
+            if (user) {
+                return res.status(400).json({ valid: false, message: "Email already exists" });
+            } else {
+                Utilisateurmodel.create(req.body)
+                    .then(newUser => res.status(201).json({ valid: true, user: newUser }))
+                    .catch(err => res.status(500).json({ valid: false, error: err }));
+            }
+        }).catch(err => res.status(500).json({ valid: false, error: err }));
 });
+
+
 
 app.post("/login", (req, res) => {
     const { email, motDePasse } = req.body;
@@ -141,6 +152,13 @@ app.post("/login", (req, res) => {
             console.error('Erreur lors de la tentative de connexion:', err);
             res.json(err);
         });
+});
+
+// Endpoint de déconnexion
+app.post('/logout', (req, res) => {
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
+    res.json({ message: 'Déconnexion réussie' });
 });
 
 
