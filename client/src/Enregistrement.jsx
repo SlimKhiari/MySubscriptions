@@ -35,7 +35,7 @@ const Registration = () => {
                     if (res.data.valid) {
                         navigate('/login');
                     } else {
-                        setErrors({ email: res.data.message });
+                        setErrors({ successMessage: res.data.message });
                     }
                 })
                 .catch(err => {
@@ -53,6 +53,7 @@ const Registration = () => {
         <div className="d-flex justify-content-center align-items-center bg-white vh-100">
             <div className="bg-light p-4 rounded shadow-lg w-25">
                 <h2 className="mb-4">Créez un compte rapidement !</h2>
+                {errors.successMessage && <div className="alert alert-success">{errors.successMessage}</div>}
                 <form onSubmit={handleSubmit}>
                     <div className="mb-3">
                         <label htmlFor="nom" className="form-label">
