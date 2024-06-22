@@ -53,10 +53,7 @@ function Abonnements() {
                     <div className="collapse navbar-collapse" id="navbarNav">
                         <ul className="navbar-nav ms-auto">
                             <li className="nav-item">
-                                <Link className="nav-link" to="/create">Créer un abonnement</Link>
-                            </li>
-                            <li className="nav-item">
-                                <button onClick={handleLogout} className="btn btn-danger">Se déconnecter</button>
+                                <button onClick={handleLogout} className="btn btn-danger">Je me déconnecte</button>
                             </li>
                         </ul>
                     </div>
