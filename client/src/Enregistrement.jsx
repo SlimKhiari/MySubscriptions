@@ -32,11 +32,19 @@ const Registration = () => {
             axios.post('http://localhost:3001/register', { nom, email, motDePasse })
                 .then(res => {
                     setIsLoading(false);
-                    navigate('/login');
+                    if (res.data.valid) {
+                        navigate('/login');
+                    } else {
+                        setErrors({ email: res.data.message });
+                    }
                 })
                 .catch(err => {
                     setIsLoading(false);
-                    console.log(err);
+                    if (err.response && err.response.data) {
+                        setErrors({ email: err.response.data.message });
+                    } else {
+                        console.error(err);
+                    }
                 });
         }
     };

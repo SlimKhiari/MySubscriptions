@@ -55,7 +55,6 @@ function AjouterAbonnement () {
                     <div className='card shadow-lg border-0 rounded-lg mt-5'>
                         <div className='card-header'>
                             <h3 className='text-center font-weight-light my-4'>Mon nouveau abonnement !</h3>
-                            <h4>Email: {email}</h4>
                         </div>
                         <div className='card-body'>
                             <form onSubmit={Submit}>
