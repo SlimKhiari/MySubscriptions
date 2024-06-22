@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
+const bcrypt = require('bcrypt'); 
 
 const Abonnementmodel = require('./models/Abonnements');
 const Utilisateurmodel = require('./models/Utilisateurs');
@@ -101,58 +102,75 @@ app.post("/create", verifyUser, (req, res) => {
         .catch(err => res.json(err));
 });
 
-app.post("/register", (req, res) => {
-    const { email, motDePasse } = req.body;
+app.post("/register", async (req, res) => {
+    const { nom, email, motDePasse } = req.body;
 
-    Utilisateurmodel.findOne({ email })
-        .then(user => {
-            if (user) {
-                return res.status(400).json({ valid: false, message: "Email already exists" });
-            } else {
-                Utilisateurmodel.create(req.body)
-                    .then(newUser => res.status(201).json({ valid: true, user: newUser }))
-                    .catch(err => res.status(500).json({ valid: false, error: err }));
-            }
-        }).catch(err => res.status(500).json({ valid: false, error: err }));
+    try {
+        // Vérifier si l'utilisateur existe déjà
+        const existingUser = await Utilisateurmodel.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ valid: false, message: "Email already exists" });
+        }
+
+        // Générer un salt et hacher le mot de passe
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(motDePasse, salt);
+
+        // Créer un nouvel utilisateur avec le mot de passe haché
+        const newUser = new Utilisateurmodel({
+            nom,
+            email,
+            motDePasse: hashedPassword
+        });
+
+        // Enregistrer l'utilisateur dans la base de données
+        await newUser.save();
+
+        res.status(201).json({ valid: true, message: 'Utilisateur créé avec succès!' });
+    } catch (error) {
+        res.status(500).json({ valid: false, error: 'Une erreur est survenue lors de l\'inscription.' });
+    }
 });
 
-
-
-app.post("/login", (req, res) => {
+app.post("/login", async (req, res) => {
     const { email, motDePasse } = req.body;
     
     // Log pour vérifier que la requête est bien reçue
     console.log('Tentative de connexion:', email);
     
-    Utilisateurmodel.findOne({ email })
-        .then(user => {
-            if (user) {
-                if (user.motDePasse === motDePasse) { 
-                    const accessToken = jwt.sign({ email: email },
-                        "jwt-access-token-secret-key", { expiresIn: '1m' });
-                    const refreshToken = jwt.sign({ email: email },
-                        "jwt-refresh-token-secret-key", { expiresIn: '5m' });
+    try {
+        const user = await Utilisateurmodel.findOne({ email });
 
-                    res.cookie('accessToken', accessToken, { maxAge: 60000 });
+        if (user) {
+            const isMatch = await bcrypt.compare(motDePasse, user.motDePasse);
 
-                    res.cookie('refreshToken', refreshToken,
-                        { maxAge: 300000, httpOnly: true, secure: true, sameSite: 'strict' });
+            if (isMatch) {
+                const accessToken = jwt.sign({ email: email },
+                    "jwt-access-token-secret-key", { expiresIn: '1m' });
+                const refreshToken = jwt.sign({ email: email },
+                    "jwt-refresh-token-secret-key", { expiresIn: '5m' });
 
-                    console.log('Connexion réussie:', email);
-                    return res.json({ Login: true });
-                } else {
-                    console.log('Mot de passe incorrect pour:', email);
-                    return res.json({ Login: false, Message: "Invalid password" });
-                }
+                res.cookie('accessToken', accessToken, { maxAge: 60000 });
+
+                res.cookie('refreshToken', refreshToken,
+                    { maxAge: 300000, httpOnly: true, secure: true, sameSite: 'strict' });
+
+                console.log('Connexion réussie:', email);
+                return res.json({ Login: true });
             } else {
-                console.log('Utilisateur non trouvé:', email);
-                return res.json({ Login: false, Message: "Veuillez créer votre compte." });
+                console.log('Mot de passe incorrect pour:', email);
+                return res.json({ Login: false, Message: "Invalid password" });
             }
-        }).catch(err => {
-            console.error('Erreur lors de la tentative de connexion:', err);
-            res.json(err);
-        });
+        } else {
+            console.log('Utilisateur non trouvé:', email);
+            return res.json({ Login: false, Message: "Veuillez créer votre compte." });
+        }
+    } catch (err) {
+        console.error('Erreur lors de la tentative de connexion:', err);
+        return res.status(500).json({ error: 'Une erreur est survenue lors de la connexion.' });
+    }
 });
+
 
 // Endpoint de déconnexion
 app.post('/logout', (req, res) => {
