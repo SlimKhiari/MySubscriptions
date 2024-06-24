@@ -109,7 +109,7 @@ app.post("/register", async (req, res) => {
         // Vérifier si l'utilisateur existe déjà
         const existingUser = await Utilisateurmodel.findOne({ email });
         if (existingUser) {
-            return res.status(400).json({ valid: false, message: "Email already exists" });
+            return res.status(400).json({ valid: false, message: "L'adresse email est déjà existante." });
         }
 
         // Générer un salt et hacher le mot de passe
