@@ -3,11 +3,11 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 
 const Enregistrement = () => {
-    const [nom, setName] = useState("");
+    const [nom, setNom] = useState("");
     const [email, setEmail] = useState("");
-    const [motDePasse, setPassword] = useState("");
+    const [motDePasse, setMotdepasse] = useState("");
     const [errors, setErrors] = useState({});
-    const [isLoading, setIsLoading] = useState(false);
+    const [estChargement, setEstchargement] = useState(false);
     const navigate = useNavigate();
 
     const validate = () => {
@@ -28,10 +28,10 @@ const Enregistrement = () => {
         setErrors(validationErrors);
 
         if (Object.keys(validationErrors).length === 0) {
-            setIsLoading(true);
+            setEstchargement(true);
             axios.post('http://localhost:3001/register', { nom, email, motDePasse })
                 .then(res => {
-                    setIsLoading(false);
+                    setEstchargement(false);
                     if (res.data.valid) {
                         navigate('/login');
                     } else {
@@ -39,7 +39,7 @@ const Enregistrement = () => {
                     }
                 })
                 .catch(err => {
-                    setIsLoading(false);
+                    setEstchargement(false);
                     if (err.response && err.response.data) {
                         setErrors({ email: err.response.data.message });
                     } else {
@@ -66,7 +66,7 @@ const Enregistrement = () => {
                             name="nom"
                             className={`form-control rounded-0 ${errors.nom ? 'is-invalid' : ''}`}
                             value={nom}
-                            onChange={(e) => setName(e.target.value)}
+                            onChange={(e) => setNom(e.target.value)}
                         />
                         {errors.nom && <div className="invalid-feedback">{errors.nom}</div>}
                     </div>
@@ -96,12 +96,12 @@ const Enregistrement = () => {
                             name="motDePasse"
                             className={`form-control rounded-0 ${errors.motDePasse ? 'is-invalid' : ''}`}
                             value={motDePasse}
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={(e) => setMotdepasse(e.target.value)}
                         />
                         {errors.motDePasse && <div className="invalid-feedback">{errors.motDePasse}</div>}
                     </div>
-                    <button type="submit" className="btn btn-success w-100 rounded-0" disabled={isLoading}>
-                        {isLoading ? "Chargement..." : "Je crée mon compte"}
+                    <button type="submit" className="btn btn-success w-100 rounded-0" disabled={estChargement}>
+                        {estChargement ? "Chargement..." : "Je crée mon compte"}
                     </button>
                 </form>
                 <Link to="/login" className="btn btn-outline-secondary w-100 mt-3 rounded-0 text-decoration-none">
