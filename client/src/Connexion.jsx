@@ -2,10 +2,10 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 
-const Login = () => {
+const Connexion = () => {
     const [email, setEmail] = useState("");
-    const [motDePasse, setPassword] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
+    const [motDePasse, setMotdepasse] = useState("");
+    const [estChargement, setEstchargement] = useState(false);
     const [message, setMessage] = useState("");
     const navigate = useNavigate();
 
@@ -13,10 +13,10 @@ const Login = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setIsLoading(true);
+        setEstchargement(true);
         axios.post('http://localhost:3001/login', { email, motDePasse })
             .then(res => {
-                setIsLoading(false);
+                setEstchargement(false);
                 if (res.data.Login) {
                     console.log(res.data);
                     navigate("/dashboard");
@@ -26,7 +26,7 @@ const Login = () => {
                 }
             })
             .catch(err => {
-                setIsLoading(false);
+                setEstchargement(false);
                 console.log(err);
             });
     };
@@ -61,11 +61,11 @@ const Login = () => {
                             name="motDePasse"
                             className="form-control rounded-0"
                             value={motDePasse}
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={(e) => setMotdepasse(e.target.value)}
                         />
                     </div>
-                    <button type="submit" className="btn btn-success w-100 rounded-0" disabled={isLoading}>
-                        {isLoading ? "Chargement..." : "Je me connecte"}
+                    <button type="submit" className="btn btn-success w-100 rounded-0" disabled={estChargement}>
+                        {estChargement ? "Chargement..." : "Je me connecte"}
                     </button>
                     {message && <div className="text-danger">{message}</div>}
                 </form>
@@ -77,4 +77,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default Connexion;

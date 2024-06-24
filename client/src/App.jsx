@@ -7,7 +7,7 @@ import Abonnements from './Abonnements'
 import AjouterAbonnement from './AjouterAbonnement'
 import MettreAjourAbonnement from './MettreAjourAbonnement'
 import Enregistrement from './Enregistrement'
-import Login from './Login'
+import Connexion from './Connexion'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -17,7 +17,7 @@ function App() {
       <BrowserRouter>
           <Routes>
             <Route path='/' element={<Enregistrement />}></Route>
-            <Route path='/login' element={<Login />}></Route>
+            <Route path='/login' element={<Connexion />}></Route>
             <Route path='/dashboard' element={<Abonnements />}></Route>
             <Route path='/create' element={<AjouterAbonnement />}></Route>
             <Route path='/update/:id' element={<MettreAjourAbonnement />}></Route>
