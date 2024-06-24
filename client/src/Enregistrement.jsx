@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 
-const Registration = () => {
+const Enregistrement = () => {
     const [nom, setName] = useState("");
     const [email, setEmail] = useState("");
     const [motDePasse, setPassword] = useState("");
@@ -112,4 +112,4 @@ const Registration = () => {
     );
 };
 
-export default Registration;
+export default Enregistrement;
