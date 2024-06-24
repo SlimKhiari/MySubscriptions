@@ -159,7 +159,7 @@ app.post("/login", async (req, res) => {
                 return res.json({ Login: true });
             } else {
                 console.log('Mot de passe incorrect pour:', email);
-                return res.json({ Login: false, Message: "Invalid password" });
+                return res.json({ Login: false, Message: "Mot de passe incorrect." });
             }
         } else {
             console.log('Utilisateur non trouvé:', email);
