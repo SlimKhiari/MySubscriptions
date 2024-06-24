@@ -1,16 +1,14 @@
-import { useState } from 'react'
-import './App.css'
+import '../styles/App.css'
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css' 
 import "react-datepicker/dist/react-datepicker.css";
-import Abonnements from './Abonnements'
-import AjouterAbonnement from './AjouterAbonnement'
-import MettreAjourAbonnement from './MettreAjourAbonnement'
-import Enregistrement from './Enregistrement'
-import Connexion from './Connexion'
+import Abonnements from '../composants/Abonnements'
+import AjouterAbonnement from '../composants/AjouterAbonnement'
+import MettreAjourAbonnement from '../composants/MettreAjourAbonnement'
+import Enregistrement from '../composants/Enregistrement'
+import Connexion from '../composants/Connexion'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <div>

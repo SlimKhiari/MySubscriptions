@@ -89,10 +89,10 @@ function Abonnements() {
                                                     <td>{new Date(abonnement.dateDebut).toLocaleDateString()}</td>
                                                     <td>
                                                         <Link to={`/update/${abonnement._id}`} className='btn btn-sm me-2'>
-                                                            <img src="../public/update_logo.jpg" alt="Update" style={{ width: '20px', height: '20px' }} />
+                                                            <img src="../update_logo.jpg" alt="Update" style={{ width: '20px', height: '20px' }} />
                                                         </Link>
                                                         <button className='btn btn-sm' onClick={() => handleDelete(abonnement._id)}>
-                                                            <img src="../public/delete_logo.png" alt="Delete" style={{ width: '20px', height: '20px' }} />
+                                                            <img src="../delete_logo.png" alt="Delete" style={{ width: '20px', height: '20px' }} />
                                                         </button>
                                                     </td>
                                                 </tr>
