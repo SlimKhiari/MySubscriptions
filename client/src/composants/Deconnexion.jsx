@@ -6,7 +6,7 @@ const Deconnexion = () => {
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        axios.post('http://localhost:3001/logout', {}, { withCredentials: true })
+        axios.post('http://localhost:3001/api/utilisateurs/logout', {}, { withCredentials: true })
             .then(res => {
                 console.log(res.data.message);
                 navigate('/login');

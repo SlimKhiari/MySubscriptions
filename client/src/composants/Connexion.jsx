@@ -14,7 +14,7 @@ const Connexion = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         setEstchargement(true);
-        axios.post('http://localhost:3001/login', { email, motDePasse })
+        axios.post('http://localhost:3001/api/utilisateurs/login', { email, motDePasse })
             .then(res => {
                 setEstchargement(false);
                 if (res.data.Login) {

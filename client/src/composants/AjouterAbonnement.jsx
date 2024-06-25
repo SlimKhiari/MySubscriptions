@@ -17,7 +17,7 @@ function AjouterAbonnement () {
     axios.defaults.withCredentials = true;
 
     useEffect(() => {
-        axios.get("http://localhost:3001/dashboard")
+        axios.get("http://localhost:3001/api/abonnements/dashboard")
             .then(result => {
                 console.log(result.data)
                 if (!result.data.valid) {
@@ -32,7 +32,7 @@ function AjouterAbonnement () {
     const Submit = (e) => {
         e.preventDefault();
         const formattedDate = `${dateDebut.getFullYear()}-${(dateDebut.getMonth() + 1).toString().padStart(2, '0')}-${dateDebut.getDate().toString().padStart(2, '0')}`;
-        axios.post("http://localhost:3001/create", {nom, cout, period, dateDebut: formattedDate, email})
+        axios.post("http://localhost:3001/api/abonnements/create", {nom, cout, period, dateDebut: formattedDate, email})
             .then(result => {
                 console.log(result);
                 navigate("/dashboard");

@@ -11,7 +11,7 @@ function Abonnements() {
     axios.defaults.withCredentials = true;
 
     useEffect(() => {
-        axios.get("http://localhost:3001/dashboard")
+        axios.get("http://localhost:3001/api/abonnements/dashboard")
             .then(result => {
                 if(result.data.valid) {
                     setAbonnements(result.data.abonnements);
@@ -23,7 +23,7 @@ function Abonnements() {
     }, []);
 
     const handleDelete = (id) => {
-        axios.delete('http://localhost:3001/delete/' + id)
+        axios.delete('http://localhost:3001/api/abonnements/delete/' + id)
             .then(res => {
                 setAbonnements(abonnements.filter(user => user._id !== id));
             })
@@ -31,7 +31,7 @@ function Abonnements() {
     };
 
     const handleLogout = () => {
-        axios.post('http://localhost:3001/logout', {}, { withCredentials: true })
+        axios.post('http://localhost:3001/api/utilisateurs/logout', {}, { withCredentials: true })
             .then(res => {
                 console.log(res.data.message);
                 navigate('/login');

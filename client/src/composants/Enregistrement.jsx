@@ -29,7 +29,7 @@ const Enregistrement = () => {
 
         if (Object.keys(validationErrors).length === 0) {
             setEstchargement(true);
-            axios.post('http://localhost:3001/register', { nom, email, motDePasse })
+            axios.post('http://localhost:3001/api/utilisateurs/register', { nom, email, motDePasse })
                 .then(res => {
                     setEstchargement(false);
                     if (res.data.valid) {

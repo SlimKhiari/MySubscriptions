@@ -15,7 +15,7 @@ function MettreAjourAbonnement() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get('http://localhost:3001/get/' + id)
+        axios.get('http://localhost:3001/api/abonnements/get/' + id)
             .then(result => {
                 console.log(result);
                 setName(result.data.nom);
@@ -27,7 +27,7 @@ function MettreAjourAbonnement() {
     }, [id]);
 
     useEffect(() => {
-        axios.get("http://localhost:3001/dashboard")
+        axios.get("http://localhost:3001/api/abonnements/dashboard")
             .then(result => {
                 if (!result.data.valid) {
                     navigate("/login");
@@ -39,7 +39,7 @@ function MettreAjourAbonnement() {
     const Update = (e) => {
         e.preventDefault();
         const formattedDate = `${dateDebut.getFullYear()}-${(dateDebut.getMonth() + 1).toString().padStart(2, '0')}-${dateDebut.getDate().toString().padStart(2, '0')}`;
-        axios.put("http://localhost:3001/update/" + id, { nom, cout, period, dateDebut: formattedDate })
+        axios.put("http://localhost:3001/api/abonnements/update/" + id, { nom, cout, period, dateDebut: formattedDate })
             .then(result => {
                 console.log(result);
                 navigate("/dashboard");
