@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import axios from 'axios';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 function MettreAjourAbonnement() {
     const { id } = useParams();
@@ -55,62 +56,93 @@ function MettreAjourAbonnement() {
         setCout(value);
     };
 
+    const handleLogout = () => {
+        axios.post('http://localhost:3001/api/utilisateurs/logout', {}, { withCredentials: true })
+            .then(res => {
+                console.log(res.data.message);
+                navigate('/login');
+            })
+            .catch(err => {
+                console.error('Erreur lors de la déconnexion:', err);
+            });
+    };
+
     return (
-        <div className="container mt-5">
-            <div className='row justify-content-center'>
-                <div className='col-lg-8'>
-                    <div className='card shadow-lg border-0 rounded-lg mt-5'>
-                        <div className='card-header'>
-                            <h3 className='text-center font-weight-light my-4'>Mon abonnement mise à jour !</h3>
-                        </div>
-                        <div className='card-body'>
-                            <form onSubmit={Update}>
-                                <div className='mb-3'>
-                                    <label className='form-label'>Nom</label>
-                                    <input
-                                        type="text"
-                                        className='form-control'
-                                        placeholder='Enter Name'
-                                        value={nom}
-                                        onChange={(e) => setName(e.target.value)}
-                                    />
-                                </div>
-                                <div className="mb-3">
-                                    <label className='form-label'>Prix</label>
-                                    <div className="input-group">
+        <div>
+            {/* Navbar */}
+            <nav className="navbar navbar-expand-lg navbar-light bg-light">
+                <div className="container-fluid">
+                    <Link className="navbar-brand" to="/dashboard">MySubscriptions</Link>
+                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span className="navbar-toggler-icon"></span>
+                    </button>
+                    <div className="collapse navbar-collapse" id="navbarNav">
+                        <ul className="navbar-nav ms-auto">
+                            <li className="nav-item">
+                                <button onClick={handleLogout} className="btn btn-danger">Je me déconnecte</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        
+            {/* Contenu de la page */}
+            <div className="container mt-5">
+                <div className='row justify-content-center'>
+                    <div className='col-lg-8'>
+                        <div className='card shadow-lg border-0 rounded-lg mt-5'>
+                            <div className='card-header'>
+                                <h3 className='text-center font-weight-light my-4'>Mon abonnement mise à jour !</h3>
+                            </div>
+                            <div className='card-body'>
+                                <form onSubmit={Update}>
+                                    <div className='mb-3'>
+                                        <label className='form-label'>Nom</label>
                                         <input
-                                            type="number"
-                                            className="form-control"
-                                            placeholder="Enter Price"
-                                            value={cout}
-                                            onChange={handleCostChange}
+                                            type="text"
+                                            className='form-control'
+                                            placeholder='Enter Name'
+                                            value={nom}
+                                            onChange={(e) => setName(e.target.value)}
                                         />
-                                        <div className="input-group-append">
-                                            <select
-                                                className="form-select"
-                                                value={period}
-                                                onChange={(e) => setPeriod(e.target.value)}
-                                            >
-                                                <option value="Mensuel">Mensuel</option>
-                                                <option value="Annuel">Annuel</option>
-                                            </select>
+                                    </div>
+                                    <div className="mb-3">
+                                        <label className='form-label'>Prix</label>
+                                        <div className="input-group">
+                                            <input
+                                                type="number"
+                                                className="form-control"
+                                                placeholder="Enter Price"
+                                                value={cout}
+                                                onChange={handleCostChange}
+                                            />
+                                            <div className="input-group-append">
+                                                <select
+                                                    className="form-select"
+                                                    value={period}
+                                                    onChange={(e) => setPeriod(e.target.value)}
+                                                >
+                                                    <option value="Mensuel">Mensuel</option>
+                                                    <option value="Annuel">Annuel</option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className='mb-3'>
-                                    <label className='form-label'>Date de début de facturation</label>
-                                    <DatePicker
-                                        selected={dateDebut}
-                                        onChange={date => setDateDebut(date)}
-                                        className="form-control"
-                                        placeholderText="MM/JJ/YYYY"
-                                        dateFormat="dd/MM/yyyy"
-                                    />
-                                </div>
-                                <div className='d-grid'>
-                                    <button className='btn btn-primary btn-block'>Je mets à jour</button>
-                                </div>
-                            </form>
+                                    <div className='mb-3'>
+                                        <label className='form-label'>Date de début de facturation</label>
+                                        <DatePicker
+                                            selected={dateDebut}
+                                            onChange={date => setDateDebut(date)}
+                                            className="form-control"
+                                            placeholderText="MM/JJ/YYYY"
+                                            dateFormat="dd/MM/yyyy"
+                                        />
+                                    </div>
+                                    <div className='d-grid'>
+                                        <button className='btn btn-primary btn-block'>Je mets à jour</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
