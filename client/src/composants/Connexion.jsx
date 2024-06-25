@@ -6,29 +6,42 @@ const Connexion = () => {
     const [email, setEmail] = useState("");
     const [motDePasse, setMotdepasse] = useState("");
     const [estChargement, setEstchargement] = useState(false);
+    const [errors, setErrors] = useState({});
     const [message, setMessage] = useState("");
     const navigate = useNavigate();
 
     axios.defaults.withCredentials = true;
 
+    const validate = () => {
+        const errors = {};
+        if (!email) errors.email = "L'email est requis";
+        if (!motDePasse) errors.motDePasse = "Le mot de passe est requis";
+        return errors;
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        setEstchargement(true);
-        axios.post('http://localhost:3001/api/utilisateurs/login', { email, motDePasse })
-            .then(res => {
-                setEstchargement(false);
-                if (res.data.Login) {
-                    console.log(res.data);
-                    navigate("/dashboard");
-                } else {
-                    setMessage(res.data.Message);
-                    navigate("/login");
-                }
-            })
-            .catch(err => {
-                setEstchargement(false);
-                console.log(err);
-            });
+        const validationErrors = validate();
+        setErrors(validationErrors);
+
+        if (Object.keys(validationErrors).length === 0) {
+            setEstchargement(true);
+            axios.post('http://localhost:3001/api/utilisateurs/login', { email, motDePasse })
+                .then(res => {
+                    setEstchargement(false);
+                    if (res.data.Login) {
+                        console.log(res.data);
+                        navigate("/dashboard");
+                    } else {
+                        setMessage(res.data.Message);
+                        navigate("/login");
+                    }
+                })
+                .catch(err => {
+                    setEstchargement(false);
+                    console.log(err);
+                });
+        }
     };
 
     return (
@@ -45,10 +58,11 @@ const Connexion = () => {
                             placeholder="Entrez votre email"
                             autoComplete="off"
                             name="email"
-                            className="form-control rounded-0"
+                            className={`form-control rounded-0 ${errors.email ? 'is-invalid' : ''}`}
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                         />
+                        {errors.email && <div className="invalid-feedback">{errors.email}</div>}
                     </div>
                     <div className="mb-3">
                         <label htmlFor="motDePasse" className="form-label">
@@ -59,10 +73,11 @@ const Connexion = () => {
                             placeholder="Entrez votre mot de passe"
                             autoComplete="off"
                             name="motDePasse"
-                            className="form-control rounded-0"
+                            className={`form-control rounded-0 ${errors.motDePasse ? 'is-invalid' : ''}`}
                             value={motDePasse}
                             onChange={(e) => setMotdepasse(e.target.value)}
                         />
+                        {errors.motDePasse && <div className="invalid-feedback">{errors.motDePasse}</div>}
                     </div>
                     <button type="submit" className="btn btn-success w-100 rounded-0" disabled={estChargement}>
                         {estChargement ? "Chargement..." : "Je me connecte"}
