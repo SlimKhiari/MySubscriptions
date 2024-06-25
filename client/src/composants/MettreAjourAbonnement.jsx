@@ -12,6 +12,20 @@ function MettreAjourAbonnement() {
     const [cout, setCout] = useState(0);
     const [period, setPeriod] = useState("Mensuel");
     const [dateDebut, setDateDebut] = useState(new Date());
+    const [modeSombre, setModeSombre] = useState(() => {
+        const modeSombreLocal = localStorage.getItem('modeSombre');
+        return modeSombreLocal ? JSON.parse(modeSombreLocal) : false;
+    });
+
+    const toggleModeSombre = () => {
+        const newModeSombre = !modeSombre;
+        setModeSombre(newModeSombre);
+        localStorage.setItem('modeSombre', JSON.stringify(newModeSombre));
+    };
+    
+    useEffect(() => {
+        document.body.classList.toggle('dark-mode', modeSombre);
+    }, [modeSombre]);
 
     const navigate = useNavigate();
 
@@ -70,13 +84,19 @@ function MettreAjourAbonnement() {
     return (
         <div>
             {/* Navbar */}
-            <nav className="navbar navbar-expand-lg navbar-light bg-light">
+            <nav className={`navbar navbar-expand-lg ${modeSombre ? 'navbar-dark bg-dark' : 'navbar-light bg-light'}`}>
                 <div className="container-fluid">
-                    <Link className="navbar-brand" to="/dashboard">MySubscriptions</Link>
+                    <Link className="navbar-brand" to="/dashboard" style={{ color: modeSombre ? 'white' : 'black' }}>MySubscriptions</Link>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
                     </button>
                     <div className="collapse navbar-collapse" id="navbarNav">
+                        <div className="form-check form-switch ms-auto">
+                            <input className="form-check-input" type="checkbox" id="darkModeSwitch" checked={modeSombre} onChange={toggleModeSombre} />
+                            <label className="form-check-label" htmlFor="darkModeSwitch" style={{ color: modeSombre ? 'white' : 'black' }}>
+                                {modeSombre ? 'Désactiver le mode sombre' : 'Activer le mode sombre'}
+                            </label>
+                        </div>
                         <ul className="navbar-nav ms-auto">
                             <li className="nav-item">
                                 <button onClick={handleLogout} className="btn btn-danger">Je me déconnecte</button>
@@ -90,7 +110,7 @@ function MettreAjourAbonnement() {
             <div className="container mt-5">
                 <div className='row justify-content-center'>
                     <div className='col-lg-8'>
-                        <div className='card shadow-lg border-0 rounded-lg mt-5'>
+                        <div  className={`card shadow-lg border-0 rounded-lg mt-5 ${modeSombre ? 'text-white bg-dark' : 'bg-light'}`}>
                             <div className='card-header'>
                                 <h3 className='text-center font-weight-light my-4'>Mon abonnement mise à jour !</h3>
                             </div>
@@ -100,7 +120,7 @@ function MettreAjourAbonnement() {
                                         <label className='form-label'>Nom</label>
                                         <input
                                             type="text"
-                                            className='form-control'
+                                            className={`form-control ${modeSombre ? 'text-white bg-dark' : 'bg-light'}`}
                                             placeholder='Enter Name'
                                             value={nom}
                                             onChange={(e) => setName(e.target.value)}
@@ -108,17 +128,19 @@ function MettreAjourAbonnement() {
                                     </div>
                                     <div className="mb-3">
                                         <label className='form-label'>Prix</label>
-                                        <div className="input-group">
-                                            <input
-                                                type="number"
-                                                className="form-control"
-                                                placeholder="Enter Price"
-                                                value={cout}
-                                                onChange={handleCostChange}
-                                            />
-                                            <div className="input-group-append">
+                                        <div className="row">
+                                            <div className="col-auto">
+                                                <input
+                                                    type="number"
+                                                    className={`form-control ${modeSombre ? 'text-white bg-dark' : 'bg-light'} small-input`}
+                                                    placeholder="Entrer le prix"
+                                                    value={cout}
+                                                    onChange={handleCostChange}
+                                                />
+                                            </div>
+                                            <div className="col-auto">
                                                 <select
-                                                    className="form-select"
+                                                    className={`form-select ${modeSombre ? 'text-white bg-dark' : 'bg-light'}`}
                                                     value={period}
                                                     onChange={(e) => setPeriod(e.target.value)}
                                                 >
@@ -133,7 +155,7 @@ function MettreAjourAbonnement() {
                                         <DatePicker
                                             selected={dateDebut}
                                             onChange={date => setDateDebut(date)}
-                                            className="form-control"
+                                            className={`form-control ${modeSombre ? 'text-white bg-dark' : 'bg-light'}`}
                                             placeholderText="MM/JJ/YYYY"
                                             dateFormat="dd/MM/yyyy"
                                         />
