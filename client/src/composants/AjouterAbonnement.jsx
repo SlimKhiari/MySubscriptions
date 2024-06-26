@@ -117,6 +117,7 @@ function AjouterAbonnement() {
                                                 id='nom'
                                                 value={nom}
                                                 onChange={(e) => setName(e.target.value)}
+                                                required
                                             />
                                         </div>
                                         <div className='mb-3'>
@@ -127,6 +128,7 @@ function AjouterAbonnement() {
                                                 id='cout'
                                                 value={cout}
                                                 onChange={handleCostChange}
+                                                required
                                             />
                                         </div>
                                         <div className='mb-3'>
@@ -136,6 +138,7 @@ function AjouterAbonnement() {
                                                 id='period'
                                                 value={period}
                                                 onChange={(e) => setPeriod(e.target.value)}
+                                                required
                                             >
                                                 <option value='Mensuel'>Mensuel</option>
                                                 <option value='Annuel'>Annuel</option>

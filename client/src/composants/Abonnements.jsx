@@ -3,9 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import "bootstrap/dist/css/bootstrap.min.css";
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import AbonnementsListe from './AbonnementsListe';
 
 function Abonnements() {
     const [abonnements, setAbonnements] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filterCost, setFilterCost] = useState('All');
+    const [coutMoyen, setCoutMoyen] = useState(0);
+
     const navigate = useNavigate();
 
     const [modeSombre, setModeSombre] = useState(() => {
@@ -18,24 +23,35 @@ function Abonnements() {
         setModeSombre(newModeSombre);
         localStorage.setItem('modeSombre', JSON.stringify(newModeSombre));
     };
-    
+
     useEffect(() => {
         document.body.classList.toggle('dark-mode', modeSombre);
     }, [modeSombre]);
 
     axios.defaults.withCredentials = true;
 
+    const normalizeCost = (abonnement) => {
+        if (abonnement.period === 'Annuel') {
+            return abonnement.cout / 12;
+        }
+        return abonnement.cout;
+    };
+
     useEffect(() => {
         axios.get("http://localhost:3001/api/abonnements/dashboard")
             .then(result => {
-                if(result.data.valid) {
-                    setAbonnements(result.data.abonnements);
+                if (result.data.valid) {
+                    const abonnements = result.data.abonnements;
+                    const normalizedCosts = abonnements.map(normalizeCost);
+                    const averageCost = normalizedCosts.reduce((acc, cost) => acc + cost, 0) / normalizedCosts.length;
+                    setAbonnements(abonnements);
+                    setCoutMoyen(averageCost); 
                 } else {
                     navigate("/");
                 }
             })
             .catch(err => console.log(err));
-    }, []);
+    }, [navigate]);     
 
     const handleDelete = (id) => {
         axios.delete('http://localhost:3001/api/abonnements/delete/' + id)
@@ -55,6 +71,21 @@ function Abonnements() {
                 console.error('Erreur lors de la déconnexion:', err);
             });
     };
+
+    const handleSearch = (event) => {
+        setSearchTerm(event.target.value);
+    };
+
+    const handleCostChange = (event) => {
+        setFilterCost(event.target.value);
+    };
+
+    const filteredAbonnements = abonnements.filter((abonnement) => {
+        return (
+            abonnement.nom.toLowerCase().includes(searchTerm.toLowerCase()) &&
+            (filterCost === 'All' || (filterCost === 'Low' && normalizeCost(abonnement) < coutMoyen) || (filterCost === 'High' && normalizeCost(abonnement) >= coutMoyen))
+        );
+    });    
 
     return (
         <div>
@@ -91,36 +122,23 @@ function Abonnements() {
                                 <Link to="/create" className='btn btn-primary'>+</Link>
                             </div>
                             <div className={`card-body ${modeSombre ? 'text-white' : 'text-dark'}`}>
-                                <table className='table table-striped'>
-                                    <thead>
-                                        <tr>
-                                            <th className={`table-cell ${modeSombre ? 'table-dark text-white' : 'table-light'}`}>Nom</th>
-                                            <th className={`table-cell ${modeSombre ? 'table-dark text-white' : 'table-light'}`}>Coût</th>
-                                            <th className={`table-cell ${modeSombre ? 'table-dark text-white' : 'table-light'}`}>Période</th>
-                                            <th className={`table-cell ${modeSombre ? 'table-dark text-white' : 'table-light'}`}>Date de début de facturation</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {
-                                            abonnements.map((abonnement) => (
-                                                <tr key={abonnement._id}>
-                                                    <td className={`table-cell ${modeSombre ? 'table-dark text-white' : 'table-light'}`}>{abonnement.nom}</td>
-                                                    <td className={`table-cell ${modeSombre ? 'table-dark text-white' : 'table-light'}`}>{abonnement.cout}</td>
-                                                    <td className={`table-cell ${modeSombre ? 'table-dark text-white' : 'table-light'}`}>{abonnement.period}</td>
-                                                    <td className={`table-cell ${modeSombre ? 'table-dark text-white' : 'table-light'}`}>{new Date(abonnement.dateDebut).toLocaleDateString()}</td>
-                                                    <td className={`table-cell ${modeSombre ? 'table-dark text-white' : 'table-light'}`}>
-                                                        <Link to={`/update/${abonnement._id}`} className='btn btn-sm me-2'>
-                                                            <img src="../update_logo.png" alt="Update" style={{ width: '20px', height: '20px' }} />
-                                                        </Link>
-                                                        <button className='btn btn-sm' onClick={() => handleDelete(abonnement._id)}>
-                                                            <img src="../delete_logo.png" alt="Delete" style={{ width: '20px', height: '20px' }} />
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            ))
-                                        }
-                                    </tbody>
-                                </table>
+                                <div className="mb-3">
+                                    <input
+                                        type="text"
+                                        className={`form-control ${modeSombre ? 'bg-secondary text-white' : ''}`}
+                                        placeholder="Tapez le nom de votre abonnement à chercher ici ..."
+                                        value={searchTerm}
+                                        onChange={handleSearch}
+                                    />
+                                </div>
+                                <div className="mb-3">
+                                    <select className={`form-select ${modeSombre ? 'bg-secondary text-white' : ''}`} value={filterCost} onChange={handleCostChange}>
+                                        <option value="All">Tous les coûts</option>
+                                        <option value="Low">Coût bas</option>
+                                        <option value="High">Coût élevé</option>
+                                    </select>
+                                </div>
+                                <AbonnementsListe abonnements={filteredAbonnements} handleDelete={handleDelete} modeSombre={modeSombre} />
                             </div>
                         </div>
                     </div>
