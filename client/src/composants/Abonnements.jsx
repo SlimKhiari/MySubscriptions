@@ -30,7 +30,7 @@ function Abonnements() {
 
     axios.defaults.withCredentials = true;
 
-    const normalizeCost = (abonnement) => {
+    const normaliserCout = (abonnement) => {
         if (abonnement.period === 'Annuel') {
             return abonnement.cout / 12;
         }
@@ -42,10 +42,10 @@ function Abonnements() {
             .then(result => {
                 if (result.data.valid) {
                     const abonnements = result.data.abonnements;
-                    const normalizedCosts = abonnements.map(normalizeCost);
-                    const averageCost = normalizedCosts.reduce((acc, cost) => acc + cost, 0) / normalizedCosts.length;
+                    const coutsNormaliser = abonnements.map(normaliserCout);
+                    const coutMoyenCalcule = coutsNormaliser.reduce((acc, cost) => acc + cost, 0) / coutsNormaliser.length;
                     setAbonnements(abonnements);
-                    setCoutMoyen(averageCost); 
+                    setCoutMoyen(coutMoyenCalcule); 
                 } else {
                     navigate("/");
                 }
@@ -83,7 +83,7 @@ function Abonnements() {
     const filteredAbonnements = abonnements.filter((abonnement) => {
         return (
             abonnement.nom.toLowerCase().includes(searchTerm.toLowerCase()) &&
-            (filterCost === 'All' || (filterCost === 'Low' && normalizeCost(abonnement) < coutMoyen) || (filterCost === 'High' && normalizeCost(abonnement) >= coutMoyen))
+            (filterCost === 'All' || (filterCost === 'Low' && normaliserCout(abonnement) < coutMoyen) || (filterCost === 'High' && normaliserCout(abonnement) >= coutMoyen))
         );
     });    
 
