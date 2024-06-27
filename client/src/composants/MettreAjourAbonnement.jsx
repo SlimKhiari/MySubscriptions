@@ -157,6 +157,7 @@ function MettreAjourAbonnement() {
                                                 id='nom'
                                                 value={nom}
                                                 onChange={(e) => setNom(e.target.value)}
+                                                required
                                             />
                                         </div>
                                         <div className='mb-3'>
@@ -167,6 +168,7 @@ function MettreAjourAbonnement() {
                                                 id='cout'
                                                 value={cout}
                                                 onChange={handleCostChange}
+                                                required
                                             />
                                         </div>
                                         <div className='mb-3'>
@@ -176,6 +178,7 @@ function MettreAjourAbonnement() {
                                                 id='period'
                                                 value={period}
                                                 onChange={(e) => setPeriod(e.target.value)}
+                                                required
                                             >
                                                 <option value='Mensuel'>Mensuel</option>
                                                 <option value='Annuel'>Annuel</option>
@@ -188,6 +191,7 @@ function MettreAjourAbonnement() {
                                                 onChange={date => setDateDebut(date)}
                                                 className={`form-control ${modeSombre ? 'text-white bg-dark' : 'bg-light'}`}
                                                 dateFormat="dd/MM/yyyy"
+                                                required
                                             />
                                         </div>
                                         <div className='d-flex align-items-center justify-content-center mt-4 mb-0'>
