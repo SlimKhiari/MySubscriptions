@@ -50,6 +50,17 @@ function AjouterAbonnement() {
         axios.post("http://localhost:3001/api/abonnements/create", { nom, cout, period, dateDebut: formattedDate, email })
             .then(result => {
                 console.log(result);
+                 // Création de la notification après la création de l'abonnement
+                const newNotification = {
+                    userEmail: email,
+                    message: `Nouvel abonnement créé : ${nom}`
+                };
+                axios.post("http://localhost:3001/api/notifications/create", newNotification)
+                .then(notificationResult => {
+                    console.log("Notification enregistrée :", notificationResult.data);
+                    navigate("/dashboard");
+                })
+                .catch(err => console.log("Erreur lors de l'enregistrement de la notification :", err));
                 navigate("/dashboard");
             })
             .catch(err => console.log(err));

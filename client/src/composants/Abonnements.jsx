@@ -4,13 +4,32 @@ import axios from 'axios';
 import "bootstrap/dist/css/bootstrap.min.css";
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import AbonnementsListe from './AbonnementsListe';
+import Notifications from './Notifications';
 
 function Abonnements() {
     const [abonnements, setAbonnements] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [filterCost, setFilterCost] = useState('All');
     const [coutMoyen, setCoutMoyen] = useState(0);
+    const [notificationCount, setNotificationCount] = useState(0);
+    const [notifications, setNotifications] = useState([]);
+    const [showNotifications, setShowNotifications] = useState(false);
+    const userEmail = 'slim.khiari.03@gmail.com'; // Remplacez par l'email réel de l'utilisateur connecté
 
+    useEffect(() => {
+        axios.get(`http://localhost:3001/api/notifications/${userEmail}`)
+            .then(res => {
+                const unreadCount = res.data.filter(notification => !notification.read).length;
+                setNotificationCount(unreadCount);
+                setNotifications(res.data);
+            })
+            .catch(err => console.error(err));
+    }, [userEmail]);
+
+    const toggleNotifications = () => {
+        setShowNotifications(!showNotifications);
+    };    
+    
     const navigate = useNavigate();
 
     const [modeSombre, setModeSombre] = useState(() => {
@@ -60,7 +79,7 @@ function Abonnements() {
             })
             .catch(err => console.log(err));
     };
-
+    
     const handleLogout = () => {
         axios.post('http://localhost:3001/api/utilisateurs/logout', {}, { withCredentials: true })
             .then(res => {
@@ -97,13 +116,22 @@ function Abonnements() {
                         <span className="navbar-toggler-icon"></span>
                     </button>
                     <div className="collapse navbar-collapse" id="navbarNav">
-                        <div className="form-check form-switch ms-auto">
+                        <ul className="navbar-nav mx-auto"> 
+                            <li className="nav-item">
+                                <Notifications 
+                                    notifications={notifications} 
+                                    showNotifications={showNotifications} 
+                                    toggleNotifications={toggleNotifications} 
+                                />
+                            </li>
+                        </ul>
+                        <div className="form-check form-switch ms-auto"> 
                             <input className="form-check-input" type="checkbox" id="darkModeSwitch" checked={modeSombre} onChange={toggleModeSombre} />
                             <label className="form-check-label" htmlFor="darkModeSwitch" style={{ color: modeSombre ? 'white' : 'black' }}>
                                 {modeSombre ? 'Désactiver le mode sombre' : 'Activer le mode sombre'}
                             </label>
                         </div>
-                        <ul className="navbar-nav ms-auto">
+                        <ul className="navbar-nav ms-auto"> {/* Aligne le bouton de déconnexion à droite */}
                             <li className="nav-item">
                                 <button onClick={handleLogout} className="btn btn-danger">Je me déconnecte</button>
                             </li>
