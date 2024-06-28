@@ -1,8 +1,8 @@
 # MySubscriptions
 
 ## MongoDB
-sudo service mongod status
-sudo service mongod start
+- sudo service mongod status
+- sudo service mongod start
 
 ## Client 
 - cd client
