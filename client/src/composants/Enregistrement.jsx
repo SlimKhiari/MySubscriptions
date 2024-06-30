@@ -51,8 +51,8 @@ const Enregistrement = () => {
 
     return (
         <div className="d-flex justify-content-center align-items-center bg-white vh-100">
-            <div className="bg-light p-4 rounded shadow-lg w-25">
-                <h2 className="mb-4">Créez un compte rapidement !</h2>
+            <div className="bg-light p-4 rounded shadow-lg" style={{ width: '100%', maxWidth: '600px' }}>
+                <h2 className="mb-4 text-center">Créez un compte rapidement !</h2>
                 {errors.successMessage && <div className="alert alert-success">{errors.successMessage}</div>}
                 <form onSubmit={handleSubmit}>
                     <div className="mb-3">

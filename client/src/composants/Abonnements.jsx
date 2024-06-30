@@ -14,7 +14,7 @@ function Abonnements() {
     const [notificationCount, setNotificationCount] = useState(0);
     const [notifications, setNotifications] = useState([]);
     const [showNotifications, setShowNotifications] = useState(false);
-    const userEmail = 'slim.khiari.03@gmail.com'; // Remplacez par l'email réel de l'utilisateur connecté
+    const userEmail = 'test@test.test'; // Remplacez par l'email réel de l'utilisateur connecté
 
     useEffect(() => {
         axios.get(`http://localhost:3001/api/notifications/${userEmail}`)

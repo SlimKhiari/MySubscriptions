@@ -34,7 +34,6 @@ const Connexion = () => {
                         navigate("/dashboard");
                     } else {
                         setMessage(res.data.Message);
-                        navigate("/login");
                     }
                 })
                 .catch(err => {
@@ -46,8 +45,8 @@ const Connexion = () => {
 
     return (
         <div className="d-flex justify-content-center align-items-center bg-white vh-100">
-            <div className="bg-light p-4 rounded shadow-lg w-25">
-                <h2 className="mb-4">Connectez-vous facilement !</h2>
+            <div className="bg-light p-4 rounded shadow-lg w-100 w-md-75 w-lg-50" style={{ maxWidth: '600px' }}>
+                <h2 className="mb-4 text-center">Connectez-vous facilement !</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="mb-3">
                         <label htmlFor="email" className="form-label">
@@ -82,7 +81,7 @@ const Connexion = () => {
                     <button type="submit" className="btn btn-success w-100 rounded-0" disabled={estChargement}>
                         {estChargement ? "Chargement..." : "Je me connecte"}
                     </button>
-                    {message && <div className="text-danger">{message}</div>}
+                    {message && <div className="text-danger mt-2">{message}</div>}
                 </form>
                 <Link to="/" className="btn btn-outline-secondary w-100 mt-3 rounded-0 text-decoration-none">
                     Je crée mon compte
