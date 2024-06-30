@@ -1,4 +1,5 @@
 .notifications-container {
+    font-size: 20px; 
     position: relative;
 }
 
@@ -6,9 +7,10 @@
     position: absolute;
     top: 40px;
     right: 0;
-    width: 300px;
+    width: 300px; /* Largeur initiale pour les grandes tailles d'écran */
+    max-width: 1000%; /* Utilisation maximale de la largeur parente */
     max-height: 400px;
-    overflow-y: auto;
+    overflow-y: auto; /* Scroll vertical si nécessaire */
     background-color: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
@@ -16,6 +18,18 @@
     z-index: 1050; /* Assurez-vous que le z-index est élevé pour que les notifications soient au-dessus des autres éléments */
 }
 
+/* Ajustements pour la responsivité */
+@media (max-width: 992px) { /* Taille d'écran moyenne */
+    .notifications-dropdown {
+        max-width: 250px; /* Réduire la largeur pour les écrans moyens */
+    }
+}
+
+@media (max-width: 768px) { /* Taille d'écran petite */
+    .notifications-dropdown {
+        max-width: 200px; /* Réduire davantage pour les petits écrans */
+    }
+}
 
 .notification-item {
     padding: 10px;
@@ -49,12 +63,10 @@
     padding: 5px 10px;
     font-size: 12px;
     position: absolute;
-    top: 0;
-    right: 0;
-    transform: translate(25%, -25%);
+    top: 10px; /* Ajustement de la position verticale */
+    right: 10px; /* Ajustement de la position horizontale */
 }
 
 .dropdown-item {
     padding: 10px;
 }
-

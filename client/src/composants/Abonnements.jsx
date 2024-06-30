@@ -107,43 +107,45 @@ function Abonnements() {
     });    
 
     return (
-        <div>
+        <div>            
             {/* Navbar */}
-            <nav className={`navbar navbar-expand-lg ${modeSombre ? 'navbar-dark bg-dark' : 'navbar-light bg-light'}`}>
+             <nav className={`navbar navbar-expand-lg ${modeSombre ? 'navbar-dark bg-dark' : 'navbar-light bg-light'}`}>
                 <div className="container-fluid">
-                    <Link className="navbar-brand" to="/dashboard" style={{ color: modeSombre ? 'white' : 'black' }}>MySubscriptions</Link>
-                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-                    <div className="collapse navbar-collapse" id="navbarNav">
-                        <ul className="navbar-nav mx-auto"> 
-                            <li className="nav-item">
-                                <Notifications 
-                                    notifications={notifications} 
-                                    showNotifications={showNotifications} 
-                                    toggleNotifications={toggleNotifications} 
-                                />
-                            </li>
-                        </ul>
-                        <div className="form-check form-switch ms-auto"> 
-                            <input className="form-check-input" type="checkbox" id="darkModeSwitch" checked={modeSombre} onChange={toggleModeSombre} />
-                            <label className="form-check-label" htmlFor="darkModeSwitch" style={{ color: modeSombre ? 'white' : 'black' }}>
-                                {modeSombre ? 'Désactiver le mode sombre' : 'Activer le mode sombre'}
-                            </label>
-                        </div>
-                        <ul className="navbar-nav ms-auto"> {/* Aligne le bouton de déconnexion à droite */}
-                            <li className="nav-item">
-                            <img
-                                src="../logout_logo.png"
-                                alt="Déconnexion"
-                                onClick={handleLogout}
-                                style={{ cursor: 'pointer', width: '50px', height: '50px' }}
+                    <Link className="navbar-brand me-auto" to="/dashboard" style={{ color: modeSombre ? 'white' : 'black' }}>MySubscriptions</Link>
+
+                    <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li className="nav-item">
+                            <Notifications 
+                                notifications={notifications} 
+                                showNotifications={showNotifications} 
+                                toggleNotifications={toggleNotifications} 
                             />
-                            </li>
-                        </ul>
+                        </li>
+                    </ul>
+
+                    <div className="form-check form-switch me-3">
+                        <input className="form-check-input d-none" type="checkbox" id="darkModeSwitch" checked={modeSombre} onChange={toggleModeSombre} />
+                        <label className="form-check-label m-0 p-0" htmlFor="darkModeSwitch" style={{ cursor: 'pointer' }}>
+                            <button onClick={toggleModeSombre} style={{ background: 'none', border: 'none', padding: 0 }}>
+                                {modeSombre ? (
+                                    <img src="../light_mode_logo.png" alt="Activer le mode clair" style={{ width: '46px', height: '45px' }} />
+                                ) : (
+                                    <img src="../dark_mode_logo.png" alt="Activer le mode sombre" style={{ width: '45px', height: '45px' }} />
+                                )}
+                            </button>
+                        </label>
                     </div>
+
+                    <button className="btn" onClick={handleLogout}>
+                        <img
+                            src="../logout_logo.png"
+                            alt="Déconnexion"
+                            style={{ width: '50px', height: '50px' }}
+                        />
+                    </button>
                 </div>
             </nav>
+
 
             {/* Contenu de la page */}
             <div className="container mt-5">
