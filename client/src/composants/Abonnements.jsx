@@ -146,7 +146,6 @@ function Abonnements() {
                 </div>
             </nav>
 
-
             {/* Contenu de la page */}
             <div className="container mt-5">
                 <div className="row justify-content-center">

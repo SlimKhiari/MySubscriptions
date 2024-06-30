@@ -5,6 +5,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import Notifications from './Notifications';
 
 function AjouterAbonnement() {
     const [nom, setName] = useState("");
@@ -16,6 +17,24 @@ function AjouterAbonnement() {
         const modeSombreLocal = localStorage.getItem('modeSombre');
         return modeSombreLocal ? JSON.parse(modeSombreLocal) : false;
     });
+    const [notificationCount, setNotificationCount] = useState(0);
+    const [notifications, setNotifications] = useState([]);
+    const [showNotifications, setShowNotifications] = useState(false);
+    const userEmail = 'slim.khiari.03@gmail.com'; // Remplacez par l'email réel de l'utilisateur connecté
+
+    useEffect(() => {
+        axios.get(`http://localhost:3001/api/notifications/${userEmail}`)
+            .then(res => {
+                const unreadCount = res.data.filter(notification => !notification.read).length;
+                setNotificationCount(unreadCount);
+                setNotifications(res.data);
+            })
+            .catch(err => console.error(err));
+    }, [userEmail]);
+
+    const toggleNotifications = () => {
+        setShowNotifications(!showNotifications);
+    };    
 
     const toggleModeSombre = () => {
         const newModeSombre = !modeSombre;
@@ -89,26 +108,41 @@ function AjouterAbonnement() {
             <div>
                 {/* Navbar */}
                 <nav className={`navbar navbar-expand-lg ${modeSombre ? 'navbar-dark bg-dark' : 'navbar-light bg-light'}`}>
-                    <div className="container-fluid">
-                        <Link className="navbar-brand" to="/dashboard" style={{ color: modeSombre ? 'white' : 'black' }}>MySubscriptions</Link>
-                        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                            <span className="navbar-toggler-icon"></span>
-                        </button>
-                        <div className="collapse navbar-collapse" id="navbarNav">
-                            <div className="form-check form-switch ms-auto">
-                                <input className="form-check-input" type="checkbox" id="darkModeSwitch" checked={modeSombre} onChange={toggleModeSombre} />
-                                <label className="form-check-label" htmlFor="darkModeSwitch" style={{ color: modeSombre ? 'white' : 'black' }}>
-                                    {modeSombre ? 'Désactiver le mode sombre' : 'Activer le mode sombre'}
-                                </label>
-                            </div>
-                            <ul className="navbar-nav ms-auto">
-                                <li className="nav-item">
-                                    <button onClick={handleLogout} className="btn btn-danger">Je me déconnecte</button>
-                                </li>
-                            </ul>
-                        </div>
+                <div className="container-fluid">
+                    <Link className="navbar-brand me-auto" to="/dashboard" style={{ color: modeSombre ? 'white' : 'black' }}>MySubscriptions</Link>
+
+                    <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li className="nav-item">
+                            <Notifications 
+                                notifications={notifications} 
+                                showNotifications={showNotifications} 
+                                toggleNotifications={toggleNotifications} 
+                            />
+                        </li>
+                    </ul>
+
+                    <div className="form-check form-switch me-3">
+                        <input className="form-check-input d-none" type="checkbox" id="darkModeSwitch" checked={modeSombre} onChange={toggleModeSombre} />
+                        <label className="form-check-label m-0 p-0" htmlFor="darkModeSwitch" style={{ cursor: 'pointer' }}>
+                            <button onClick={toggleModeSombre} style={{ background: 'none', border: 'none', padding: 0 }}>
+                                {modeSombre ? (
+                                    <img src="../light_mode_logo.png" alt="Activer le mode clair" style={{ width: '46px', height: '45px' }} />
+                                ) : (
+                                    <img src="../dark_mode_logo.png" alt="Activer le mode sombre" style={{ width: '45px', height: '45px' }} />
+                                )}
+                            </button>
+                        </label>
                     </div>
-                </nav>
+
+                    <button className="btn" onClick={handleLogout}>
+                        <img
+                            src="../logout_logo.png"
+                            alt="Déconnexion"
+                            style={{ width: '50px', height: '50px' }}
+                        />
+                    </button>
+                </div>
+            </nav>
 
                 {/* Contenu de la page */}
                 <div className="container mt-5">

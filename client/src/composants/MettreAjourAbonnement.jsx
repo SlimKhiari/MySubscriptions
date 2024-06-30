@@ -5,6 +5,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import Notifications from './Notifications';
 
 function MettreAjourAbonnement() {
   const { id } = useParams();
@@ -16,6 +17,24 @@ function MettreAjourAbonnement() {
     const modeSombreLocal = localStorage.getItem("modeSombre");
     return modeSombreLocal ? JSON.parse(modeSombreLocal) : false;
   });
+  const [notificationCount, setNotificationCount] = useState(0);
+    const [notifications, setNotifications] = useState([]);
+    const [showNotifications, setShowNotifications] = useState(false);
+    const userEmail = 'slim.khiari.03@gmail.com'; // Remplacez par l'email réel de l'utilisateur connecté
+
+    useEffect(() => {
+        axios.get(`http://localhost:3001/api/notifications/${userEmail}`)
+            .then(res => {
+                const unreadCount = res.data.filter(notification => !notification.read).length;
+                setNotificationCount(unreadCount);
+                setNotifications(res.data);
+            })
+            .catch(err => console.error(err));
+    }, [userEmail]);
+
+    const toggleNotifications = () => {
+        setShowNotifications(!showNotifications);
+    };
 
   const toggleModeSombre = () => {
     const newModeSombre = !modeSombre;
@@ -86,124 +105,109 @@ function MettreAjourAbonnement() {
 
   return (
         <div>
-        {/* Navbar */}
-        <nav
-            className={`navbar navbar-expand-lg ${
-            modeSombre ? "navbar-dark bg-dark" : "navbar-light bg-light"
-            }`}
-        >
-            <div className="container-fluid">
-            <Link
-                className="navbar-brand"
-                to="/dashboard"
-                style={{ color: modeSombre ? "white" : "black" }}
-            >
-                MySubscriptions
-            </Link>
-            <button
-                className="navbar-toggler"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarNav"
-                aria-controls="navbarNav"
-                aria-expanded="false"
-                aria-label="Toggle navigation"
-            >
-                <span className="navbar-toggler-icon"></span>
-            </button>
-            <div className="collapse navbar-collapse" id="navbarNav">
-                <div className="form-check form-switch ms-auto">
-                <input
-                    className="form-check-input"
-                    type="checkbox"
-                    id="darkModeSwitch"
-                    checked={modeSombre}
-                    onChange={toggleModeSombre}
-                />
-                <label
-                    className="form-check-label"
-                    htmlFor="darkModeSwitch"
-                    style={{ color: modeSombre ? "white" : "black" }}
-                >
-                    {modeSombre ? "Désactiver le mode sombre" : "Activer le mode sombre"}
-                </label>
-                </div>
-                <ul className="navbar-nav ms-auto">
-                <li className="nav-item">
-                    <button onClick={handleLogout} className="btn btn-danger">
-                    Je me déconnecte
-                    </button>
-                </li>
-                </ul>
-            </div>
-            </div>
-        </nav>
+          {/* Navbar */}
+          <nav className={`navbar navbar-expand-lg ${modeSombre ? 'navbar-dark bg-dark' : 'navbar-light bg-light'}`}>
+                  <div className="container-fluid">
+                      <Link className="navbar-brand me-auto" to="/dashboard" style={{ color: modeSombre ? 'white' : 'black' }}>MySubscriptions</Link>
 
-        {/* Contenu de la page */}
-        <div className="container mt-5">
-                    <div className='row justify-content-center'>
-                        <div className='col-lg-6'>
-                            <div className={`card shadow-lg border-0 rounded-lg mt-5 ${modeSombre ? 'bg-dark text-white' : 'bg-light'}`}>
-                                <div className='card-header'>
-                                    <h3 className='text-center font-weight-light my-4'>Mon abonnement mise à jour !</h3>
-                                </div>
-                                <div className='card-body'>
-                                    <form onSubmit={updateAbonnement}>
-                                        <div className='mb-3'>
-                                            <label className='form-label'>Nom</label>
-                                            <input
-                                                type='text'
-                                                className={`form-control ${modeSombre ? 'text-white bg-dark' : 'bg-light'}`}
-                                                id='nom'
-                                                value={nom}
-                                                onChange={(e) => setNom(e.target.value)}
-                                                required
-                                            />
-                                        </div>
-                                        <div className='mb-3'>
-                                            <label htmlFor='form-label'>Coût</label>
-                                            <input
-                                                type='number'
-                                                className={`form-control ${modeSombre ? 'text-white bg-dark' : 'bg-light'}`}
-                                                id='cout'
-                                                value={cout}
-                                                onChange={handleCostChange}
-                                                required
-                                            />
-                                        </div>
-                                        <div className='mb-3'>
-                                            <label htmlFor='period'>Période</label>
-                                            <select
-                                                className={`form-select ${modeSombre ? 'text-white bg-dark' : 'bg-light'}`}
-                                                id='period'
-                                                value={period}
-                                                onChange={(e) => setPeriod(e.target.value)}
-                                                required
-                                            >
-                                                <option value='Mensuel'>Mensuel</option>
-                                                <option value='Annuel'>Annuel</option>
-                                            </select>
-                                        </div>
-                                        <div className='mb-2'>
-                                            <label htmlFor='dateDebut'>Date de début de facturation</label>
-                                            <DatePicker
-                                                selected={dateDebut}
-                                                onChange={date => setDateDebut(date)}
-                                                className={`form-control ${modeSombre ? 'text-white bg-dark' : 'bg-light'}`}
-                                                dateFormat="dd/MM/yyyy"
-                                                required
-                                            />
-                                        </div>
-                                        <div className='d-flex align-items-center justify-content-center mt-4 mb-0'>
-                                            <button type='submit' className='btn btn-primary'>J'ajoute</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-        </div>
+                      <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                          <li className="nav-item">
+                              <Notifications 
+                                  notifications={notifications} 
+                                  showNotifications={showNotifications} 
+                                  toggleNotifications={toggleNotifications} 
+                              />
+                          </li>
+                      </ul>
+
+                      <div className="form-check form-switch me-3">
+                          <input className="form-check-input d-none" type="checkbox" id="darkModeSwitch" checked={modeSombre} onChange={toggleModeSombre} />
+                          <label className="form-check-label m-0 p-0" htmlFor="darkModeSwitch" style={{ cursor: 'pointer' }}>
+                              <button onClick={toggleModeSombre} style={{ background: 'none', border: 'none', padding: 0 }}>
+                                  {modeSombre ? (
+                                      <img src="../light_mode_logo.png" alt="Activer le mode clair" style={{ width: '46px', height: '45px' }} />
+                                  ) : (
+                                      <img src="../dark_mode_logo.png" alt="Activer le mode sombre" style={{ width: '45px', height: '45px' }} />
+                                  )}
+                              </button>
+                          </label>
+                      </div>
+
+                      <button className="btn" onClick={handleLogout}>
+                          <img
+                              src="../logout_logo.png"
+                              alt="Déconnexion"
+                              style={{ width: '50px', height: '50px' }}
+                          />
+                      </button>
+                  </div>
+          </nav>
+
+          {/* Contenu de la page */}
+          <div className="container mt-5">
+                      <div className='row justify-content-center'>
+                          <div className='col-lg-6'>
+                              <div className={`card shadow-lg border-0 rounded-lg mt-5 ${modeSombre ? 'bg-dark text-white' : 'bg-light'}`}>
+                                  <div className='card-header'>
+                                      <h3 className='text-center font-weight-light my-4'>Mon abonnement mise à jour !</h3>
+                                  </div>
+                                  <div className='card-body'>
+                                      <form onSubmit={updateAbonnement}>
+                                          <div className='mb-3'>
+                                              <label className='form-label'>Nom</label>
+                                              <input
+                                                  type='text'
+                                                  className={`form-control ${modeSombre ? 'text-white bg-dark' : 'bg-light'}`}
+                                                  id='nom'
+                                                  value={nom}
+                                                  onChange={(e) => setNom(e.target.value)}
+                                                  required
+                                              />
+                                          </div>
+                                          <div className='mb-3'>
+                                              <label htmlFor='form-label'>Coût</label>
+                                              <input
+                                                  type='number'
+                                                  className={`form-control ${modeSombre ? 'text-white bg-dark' : 'bg-light'}`}
+                                                  id='cout'
+                                                  value={cout}
+                                                  onChange={handleCostChange}
+                                                  required
+                                              />
+                                          </div>
+                                          <div className='mb-3'>
+                                              <label htmlFor='period'>Période</label>
+                                              <select
+                                                  className={`form-select ${modeSombre ? 'text-white bg-dark' : 'bg-light'}`}
+                                                  id='period'
+                                                  value={period}
+                                                  onChange={(e) => setPeriod(e.target.value)}
+                                                  required
+                                              >
+                                                  <option value='Mensuel'>Mensuel</option>
+                                                  <option value='Annuel'>Annuel</option>
+                                              </select>
+                                          </div>
+                                          <div className='mb-2'>
+                                              <label htmlFor='dateDebut'>Date de début de facturation</label>
+                                              <DatePicker
+                                                  selected={dateDebut}
+                                                  onChange={date => setDateDebut(date)}
+                                                  className={`form-control ${modeSombre ? 'text-white bg-dark' : 'bg-light'}`}
+                                                  dateFormat="dd/MM/yyyy"
+                                                  required
+                                              />
+                                          </div>
+                                          <div className='d-flex align-items-center justify-content-center mt-4 mb-0'>
+                                              <button type='submit' className='btn btn-primary'>J'ajoute</button>
+                                          </div>
+                                      </form>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+          </div>
   );
 }
 
