@@ -33,6 +33,7 @@ const renewToken = (req, res, next) => {
             "jwt-access-token-secret-key", { expiresIn: '1m' });
         res.cookie('accessToken', accessToken, { maxAge: 60000 });
         req.accessTokenRenewed = true; // Indicateur pour le middleware suivant
+        next();
         return true; // Le renouvellement du token a réussi
     });
 };

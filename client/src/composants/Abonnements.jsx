@@ -133,7 +133,12 @@ function Abonnements() {
                         </div>
                         <ul className="navbar-nav ms-auto"> {/* Aligne le bouton de déconnexion à droite */}
                             <li className="nav-item">
-                                <button onClick={handleLogout} className="btn btn-danger">Je me déconnecte</button>
+                            <img
+                                src="../logout_logo.png"
+                                alt="Déconnexion"
+                                onClick={handleLogout}
+                                style={{ cursor: 'pointer', width: '50px', height: '50px' }}
+                            />
                             </li>
                         </ul>
                     </div>
