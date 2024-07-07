@@ -14,8 +14,30 @@ function Abonnements() {
     const [notificationCount, setNotificationCount] = useState(0);
     const [notifications, setNotifications] = useState([]);
     const [showNotifications, setShowNotifications] = useState(false);
-    const userEmail = 'test@test.test'; // Remplacez par l'email réel de l'utilisateur connecté
+    const [userEmail, setUserEmail] = useState(null);
 
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        axios.get('http://localhost:3001/api/utilisateurs/info', { withCredentials: true })
+            .then(res => {
+                const email = res.data.email;
+                setUserEmail(email);
+
+                axios.get(`http://localhost:3001/api/notifications/${email}`)
+                    .then(res => {
+                        const unreadCount = res.data.filter(notification => !notification.read).length;
+                        setNotificationCount(unreadCount);
+                        setNotifications(res.data);
+                    })
+                    .catch(err => console.error(err));
+            })
+            .catch(err => {
+                console.error(err);
+                navigate("/login");
+            });
+    }, [navigate]);
+    
     useEffect(() => {
         axios.get(`http://localhost:3001/api/notifications/${userEmail}`)
             .then(res => {
@@ -29,8 +51,6 @@ function Abonnements() {
     const toggleNotifications = () => {
         setShowNotifications(!showNotifications);
     };    
-    
-    const navigate = useNavigate();
 
     const [modeSombre, setModeSombre] = useState(() => {
         const modeSombreLocal = localStorage.getItem('modeSombre');
