@@ -42,10 +42,25 @@ const login = async (req, res) => {
     }
 };
 
+const getUserInfo = (req, res) => {
+    const token = req.cookies['accessToken'];
+    if (!token) {
+        return res.status(401).json({ message: 'Token non fourni.' });
+    }
+
+    jwt.verify(token, "jwt-access-token-secret-key", (err, decoded) => {
+        if (err) {
+            return res.status(401).json({ message: 'Token invalide.' });
+        }
+
+        res.status(200).json({ email: decoded.email });
+    });
+};
+
 const logout = (req, res) => {
     res.clearCookie('accessToken');
     res.clearCookie('refreshToken');
     res.json({ message: 'Déconnexion réussie' });
 };
 
-module.exports = { register, login, logout };
+module.exports = { register, login, logout, getUserInfo};
