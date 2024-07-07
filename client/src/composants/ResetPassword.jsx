@@ -34,7 +34,7 @@ const ResetPassword = () => {
   return (
     <div className="d-flex justify-content-center align-items-center bg-white vh-100">
       <div className="bg-light p-4 rounded shadow-lg w-100 w-md-75 w-lg-50" style={{ maxWidth: '600px' }}>
-        <h2 className="mb-4 text-center">Réinitialisation du Mot de Passe</h2>
+        <h2 className="mb-4 text-center">Réinitialisez votre mot de passe !</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="email" className="form-label">
@@ -82,7 +82,7 @@ const ResetPassword = () => {
             />
           </div>
           <button type="submit" className="btn btn-success w-100 rounded-0" disabled={loading}>
-            {loading ? 'Chargement...' : 'Réinitialiser Mot de Passe'}
+            {loading ? 'Chargement...' : 'Je réinitialise mon mot de passe'}
           </button>
           {message && (
             <div className={`mt-2 text-${success ? 'success' : 'danger'}`}>
