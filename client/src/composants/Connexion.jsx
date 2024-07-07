@@ -86,6 +86,9 @@ const Connexion = () => {
                 <Link to="/" className="btn btn-outline-secondary w-100 mt-3 rounded-0 text-decoration-none">
                     Je crée mon compte
                 </Link>
+                <Link to="/reset-password" className="btn btn-link w-100 mt-3 rounded-0 text-decoration-none">
+                    Mot de passe oublié ?
+                </Link>
             </div>
         </div>
     );

@@ -1,6 +1,15 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Utilisateurmodel = require('../models/Utilisateurs');
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'slim.khiari.03@gmail.com',
+        pass: 'Uvsqetisty123&',
+    },
+});
 
 const register = async (req, res) => {
     const { nom, email, motDePasse } = req.body;
@@ -15,7 +24,7 @@ const register = async (req, res) => {
         await newUser.save();
         res.status(201).json({ valid: true, message: 'Utilisateur créé avec succès!' });
     } catch (error) {
-        res.status(500).json({ valid: false, error: 'Une erreur est survenue lors de l\'inscription.' });
+        res.status(500).json({ valid: false, error: 'Une erreur est survenue lors de l\'inscription.', details: error.message });
     }
 };
 
@@ -38,7 +47,7 @@ const login = async (req, res) => {
             return res.json({ Login: false, Message: "Veuillez créer votre compte." });
         }
     } catch (err) {
-        return res.status(500).json({ error: 'Une erreur est survenue lors de la connexion.' });
+        return res.status(500).json({ error: 'Une erreur est survenue lors de la connexion.', details: err.message });
     }
 };
 
@@ -63,4 +72,25 @@ const logout = (req, res) => {
     res.json({ message: 'Déconnexion réussie' });
 };
 
-module.exports = { register, login, logout, getUserInfo};
+const resetPassword = async (req, res) => {
+    const { email, nomUtilisateur, newPassword } = req.body;
+    
+    try {
+      const user = await Utilisateurmodel.findOne({ email, nom: nomUtilisateur });
+      if (!user) {
+        return res.status(400).json({ message: "Utilisateur non trouvé." });
+      }
+  
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(newPassword, salt);
+  
+      user.motDePasse = hashedPassword;
+      await user.save();
+  
+      res.json({ message: 'Mot de passe réinitialisé avec succès.' });
+    } catch (error) {
+      res.status(500).json({ error: 'Une erreur est survenue lors de la réinitialisation du mot de passe.' });
+    }
+  };
+
+module.exports = { register, login, logout, getUserInfo, resetPassword };

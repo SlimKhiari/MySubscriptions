@@ -7,6 +7,8 @@ import AjouterAbonnement from '../composants/AjouterAbonnement'
 import MettreAjourAbonnement from '../composants/MettreAjourAbonnement'
 import Enregistrement from '../composants/Enregistrement'
 import Connexion from '../composants/Connexion'
+import ResetPassword from '../composants/ResetPassword'
+
 
 function App() {
 
@@ -16,6 +18,7 @@ function App() {
           <Routes>
             <Route path='/' element={<Enregistrement />}></Route>
             <Route path='/login' element={<Connexion />}></Route>
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path='/dashboard' element={<Abonnements />}></Route>
             <Route path='/create' element={<AjouterAbonnement />}></Route>
             <Route path='/update/:id' element={<MettreAjourAbonnement />}></Route>
