@@ -1,14 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { FaBell, FaCheckCircle } from 'react-icons/fa';
 import '../styles/Notifications.css';
 
 const Notifications = ({ notifications, showNotifications, toggleNotifications }) => {
     const [notificationList, setNotificationList] = useState(notifications);
+    const notificationRef = useRef(null);
 
     useEffect(() => {
         setNotificationList(notifications);
     }, [notifications]);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (notificationRef.current && !notificationRef.current.contains(event.target)) {
+                if (showNotifications) {
+                    toggleNotifications();
+                }
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showNotifications, toggleNotifications]);
 
     const markAsRead = (notificationId) => {
         axios.put(`http://localhost:3001/api/notifications/${notificationId}/read`)
@@ -25,7 +42,7 @@ const Notifications = ({ notifications, showNotifications, toggleNotifications }
     };
 
     return (
-        <div className="notifications-container">
+        <div className="notifications-container" ref={notificationRef}>
             <button className="nav-link btn" onClick={toggleNotifications}>
                 <FaBell />
                 {notificationList.filter(notification => !notification.read).length > 0 && (
@@ -54,4 +71,5 @@ const Notifications = ({ notifications, showNotifications, toggleNotifications }
 };
 
 export default Notifications;
+
 
