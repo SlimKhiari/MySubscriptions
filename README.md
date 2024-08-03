@@ -2,7 +2,7 @@
 
 # MySubscriptions (by OctoSphere Labs)
 
-My Subscriptions est une application full stack en javascript. La stack utilisé est MERN. Cette appliation CRUD permet de gérer tes abonnements avec une façon simple et rapide.
+My Subscriptions is a full stack application in javascript. The stack used is MERN. This CRUD application allows you to manage your subscriptions in a simple and fast way.
 
 # How to use the app ?
 [Screencast from 07 جويلية, 2024 CET 03:48:28 م.webm](https://github.com/SlimKhiari/MySubscriptions/assets/73532355/40e7ff2c-3c08-4f3a-9bd1-706d84be4fcf)
